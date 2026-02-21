@@ -1,139 +1,190 @@
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from typing import Optional
-import uuid
-from datetime import datetime
+"""
+Authentication router for ConvertAll Hub.
 
-from models.user_models import User, UserTier, AuthRequest, AuthResponse, UsageStats, UserWithStats
+Provides endpoints for user registration, login, and current user information.
+Implements JWT-based authentication with database persistence.
+"""
 
-router = APIRouter()
-security = HTTPBearer(auto_error=False)
+from fastapi import APIRouter, HTTPException, Depends, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from jose import JWTError
+import logging
 
-# Dummy user database (in production, this would be a real database)
-dummy_users = {
-    "user123": User(
-        id="user123",
-        email="demo@example.com",
-        tier=UserTier.FREE,
-        api_key="demo-api-key-123",
-        created_at=datetime.now()
-    ),
-    "pro456": User(
-        id="pro456", 
-        email="pro@example.com",
-        tier=UserTier.PRO,
-        api_key="pro-api-key-456",
-        subscription_id="sub_123",
-        created_at=datetime.now()
-    )
-}
+from models.database import User
+from schemas.auth_schemas import (
+    UserRegisterRequest,
+    UserLoginRequest,
+    UserResponse,
+    TokenResponse,
+    ErrorResponse
+)
+from services.database import get_db_session
+from services.auth_service import get_auth_service
+from middleware.auth_middleware import get_current_user
 
-@router.post("/login", response_model=AuthResponse)
-async def login(auth_request: AuthRequest):
-    """Dummy login endpoint"""
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/auth", tags=["authentication"])
+
+
+@router.post(
+    "/register",
+    response_model=TokenResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        400: {"model": ErrorResponse, "description": "User already exists"},
+        500: {"model": ErrorResponse, "description": "Internal server error"}
+    }
+)
+async def register(
+    request: UserRegisterRequest,
+    session: AsyncSession = Depends(get_db_session)
+):
+    """
+    Register a new user account.
     
-    # Simulate authentication logic
-    if auth_request.email == "demo@example.com":
-        user = dummy_users["user123"]
-    elif auth_request.email == "pro@example.com":
-        user = dummy_users["pro456"]
-    elif auth_request.api_key:
-        # Find user by API key
-        user = next((u for u in dummy_users.values() if u.api_key == auth_request.api_key), None)
-        if not user:
-            raise HTTPException(status_code=401, detail="Invalid API key")
-    else:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    Creates a new user with hashed password and returns JWT token for immediate login.
+    New users start with 'free' tier by default.
     
-    return AuthResponse(
-        user=user,
-        access_token=f"dummy-token-{user.id}",
-        expires_in=3600
-    )
-
-@router.get("/me", response_model=UserWithStats)
-async def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)):
-    """Get current user information (dummy implementation)"""
-    
-    if not credentials:
-        # Return anonymous user for demo
-        anonymous_user = User(
-            id="anonymous",
-            tier=UserTier.FREE,
-            created_at=datetime.now()
+    - **email**: Valid email address (must be unique)
+    - **password**: Password with 8-100 characters
+    """
+    try:
+        auth_service = get_auth_service()
+        
+        # Check if user already exists
+        result = await session.execute(
+            select(User).where(User.email == request.email)
         )
-        usage_stats = UsageStats(
-            conversions_today=5,
-            conversions_this_month=23,
-            total_conversions=156
+        existing_user = result.scalar_one_or_none()
+        
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User with this email already exists"
+            )
+        
+        # Hash password
+        password_hash = auth_service.hash_password(request.password)
+        
+        # Create new user
+        new_user = User(
+            email=request.email,
+            password_hash=password_hash,
+            tier="free",
+            email_verified=False
         )
-        return UserWithStats(**anonymous_user.dict(), usage_stats=usage_stats)
-    
-    # In a real implementation, you would validate the token
-    token = credentials.credentials
-    
-    if "user123" in token:
-        user = dummy_users["user123"]
-    elif "pro456" in token:
-        user = dummy_users["pro456"]
-    else:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
-    # Dummy usage stats
-    usage_stats = UsageStats(
-        conversions_today=12 if user.tier == UserTier.PRO else 5,
-        conversions_this_month=89 if user.tier == UserTier.PRO else 23,
-        total_conversions=456 if user.tier == UserTier.PRO else 156,
-        last_conversion=datetime.now()
-    )
-    
-    return UserWithStats(**user.dict(), usage_stats=usage_stats)
+        
+        session.add(new_user)
+        await session.commit()
+        await session.refresh(new_user)
+        
+        # Create access token
+        access_token = auth_service.create_access_token(new_user.id)
+        
+        logger.info(f"User registered successfully: {new_user.email}")
+        
+        return TokenResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user=UserResponse.model_validate(new_user)
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Registration error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to register user"
+        )
 
-@router.post("/register", response_model=AuthResponse)
-async def register(email: str, tier: UserTier = UserTier.FREE):
-    """Dummy user registration"""
-    
-    # Check if user already exists
-    existing_user = next((u for u in dummy_users.values() if u.email == email), None)
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User already exists")
-    
-    # Create new user
-    user_id = str(uuid.uuid4())
-    api_key = f"api-key-{user_id[:8]}"
-    
-    new_user = User(
-        id=user_id,
-        email=email,
-        tier=tier,
-        api_key=api_key,
-        created_at=datetime.now()
-    )
-    
-    dummy_users[user_id] = new_user
-    
-    return AuthResponse(
-        user=new_user,
-        access_token=f"dummy-token-{user_id}",
-        expires_in=3600
-    )
 
-@router.post("/upgrade")
-async def upgrade_to_pro(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """Dummy upgrade to Pro endpoint"""
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+    responses={
+        401: {"model": ErrorResponse, "description": "Invalid credentials"},
+        500: {"model": ErrorResponse, "description": "Internal server error"}
+    }
+)
+async def login(
+    request: UserLoginRequest,
+    session: AsyncSession = Depends(get_db_session)
+):
+    """
+    Authenticate user and return JWT token.
     
-    token = credentials.credentials
-    user = None
+    Validates email and password, returns JWT token valid for 7 days.
     
-    if "user123" in token:
-        user = dummy_users["user123"]
-    elif "pro456" in token:
-        raise HTTPException(status_code=400, detail="User is already Pro")
-    else:
-        raise HTTPException(status_code=401, detail="Invalid token")
+    - **email**: User email address
+    - **password**: User password
+    """
+    try:
+        auth_service = get_auth_service()
+        
+        # Find user by email
+        result = await session.execute(
+            select(User).where(User.email == request.email)
+        )
+        user = result.scalar_one_or_none()
+        
+        # Verify user exists and password is correct
+        if not user or not auth_service.verify_password(request.password, user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password"
+            )
+        
+        # Create access token
+        access_token = auth_service.create_access_token(user.id)
+        
+        logger.info(f"User logged in successfully: {user.email}")
+        
+        return TokenResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user=UserResponse.model_validate(user)
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Login error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to authenticate user"
+        )
+
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+    responses={
+        401: {"model": ErrorResponse, "description": "Invalid or expired token"},
+        404: {"model": ErrorResponse, "description": "User not found"},
+        500: {"model": ErrorResponse, "description": "Internal server error"}
+    }
+)
+async def get_current_user_info(
+    user: User = Depends(get_current_user)
+):
+    """
+    Get current authenticated user information.
     
-    # Simulate upgrade
-    user.tier = UserTier.PRO
-    user.subscription_id = f"sub_{uuid.uuid4()}"
+    Requires valid JWT token in Authorization header.
+    Returns user profile including tier and verification status.
     
-    return {"message": "Successfully upgraded to Pro", "tier": user.tier}
+    **Authorization**: Bearer token required
+    """
+    try:
+        logger.info(f"User info requested: {user.email}")
+        return UserResponse.model_validate(user)
+        
+    except Exception as e:
+        logger.error(f"Get current user error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve user information"
+        )

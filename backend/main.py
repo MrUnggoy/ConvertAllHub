@@ -4,12 +4,18 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import os
+import logging
 
 from routers import pdf, image, audio, video, text, ocr, qr, auth, documents, sitemap
 from models.conversion_models import ConversionResponse
 from models.user_models import User
 from middleware.rate_limit import rate_limit_middleware
 from services.progress_tracker import progress_tracker
+from services.database import init_database, get_database
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -17,6 +23,45 @@ app = FastAPI(
     description="Universal file conversion API with multiple tool endpoints",
     version="1.0.0"
 )
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on application startup"""
+    # Initialize database if DATABASE_URL is provided
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        try:
+            logger.info("Initializing database connection...")
+            db_service = init_database(
+                database_url=database_url,
+                pool_size=int(os.getenv("DB_POOL_SIZE", "20")),
+                echo=os.getenv("DB_ECHO", "false").lower() == "true"
+            )
+            
+            # Verify database connectivity within 5 seconds
+            is_healthy = await db_service.health_check(timeout=5.0)
+            if is_healthy:
+                logger.info("Database connection established successfully")
+            else:
+                logger.error("Database health check failed - service may not be fully functional")
+        except Exception as e:
+            logger.error(f"Failed to initialize database: {e}")
+            logger.warning("Application starting without database connection")
+    else:
+        logger.warning("DATABASE_URL not set - running without database")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup services on application shutdown"""
+    try:
+        db_service = get_database()
+        await db_service.close()
+        logger.info("Database connection closed")
+    except RuntimeError:
+        # Database was not initialized
+        pass
 
 # Configure CORS
 app.add_middleware(
@@ -60,8 +105,30 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "service": "convertall-hub-api"}
+    """Health check endpoint with database connectivity status"""
+    health_status = {
+        "status": "healthy",
+        "service": "convertall-hub-api",
+        "database": "not_configured"
+    }
+    
+    # Check database connectivity if configured
+    try:
+        db_service = get_database()
+        is_db_healthy = await db_service.health_check(timeout=5.0)
+        health_status["database"] = "healthy" if is_db_healthy else "unhealthy"
+        
+        if not is_db_healthy:
+            health_status["status"] = "degraded"
+    except RuntimeError:
+        # Database not initialized - this is okay for stateless mode
+        health_status["database"] = "not_configured"
+    except Exception as e:
+        health_status["database"] = "error"
+        health_status["database_error"] = str(e)
+        health_status["status"] = "degraded"
+    
+    return health_status
 
 @app.get("/api/progress/{task_id}")
 async def get_task_progress(task_id: str):

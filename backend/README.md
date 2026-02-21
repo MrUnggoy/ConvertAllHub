@@ -83,3 +83,56 @@ This is a dummy implementation with placeholder endpoints. In production:
 - Implement proper error handling and logging
 - Add rate limiting and quota enforcement
 - Set up background task processing with Celery/Redis
+
+
+## Database Setup
+
+### Prerequisites
+
+Set the `DATABASE_URL` environment variable:
+```bash
+export DATABASE_URL="postgresql+asyncpg://user:password@localhost:5432/convertall"
+```
+
+### Running Migrations
+
+Initialize the database with the latest schema:
+```bash
+cd backend
+alembic upgrade head
+```
+
+### Migration Commands
+
+Create a new migration (after modifying models):
+```bash
+alembic revision --autogenerate -m "Description of changes"
+```
+
+Apply migrations:
+```bash
+alembic upgrade head
+```
+
+Rollback one migration:
+```bash
+alembic downgrade -1
+```
+
+View migration history:
+```bash
+alembic history
+```
+
+View current migration version:
+```bash
+alembic current
+```
+
+### Database Models
+
+The application uses SQLAlchemy ORM with the following models:
+- **User**: User accounts with authentication and tier information
+- **Subscription**: Stripe subscription data and payment status
+- **Conversion**: Conversion history and tracking
+- **UsageTracking**: Monthly usage limits for free tier users
