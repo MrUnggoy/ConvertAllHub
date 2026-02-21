@@ -1,0 +1,417 @@
+{
+  "project": "ConvertAll Hub",
+  "version": "1.0.0",
+  "purpose": "Complete monetization configuration for automated ad placement, analytics, and revenue optimization",
+  
+  "monetization": {
+    "adsense": {
+      "enabled": true,
+      "client_id": "ca-pub-XXXXXXXXXXXXXXX",
+      "auto_ads": true,
+      "slots": {
+        "header_banner": {
+          "id": "1234567890",
+          "format": "horizontal",
+          "size": "728x90",
+          "responsive": true
+        },
+        "sidebar_vertical": {
+          "id": "2345678901",
+          "format": "vertical",
+          "size": "300x600",
+          "responsive": true
+        },
+        "in_content": {
+          "id": "3456789012",
+          "format": "rectangle",
+          "size": "300x250",
+          "responsive": true
+        },
+        "footer_banner": {
+          "id": "4567890123",
+          "format": "horizontal",
+          "size": "728x90",
+          "responsive": true
+        },
+        "mobile_banner": {
+          "id": "5678901234",
+          "format": "mobile_banner",
+          "size": "320x50",
+          "responsive": true
+        }
+      },
+      "component_template": {
+        "tag": "ins",
+        "className": "adsbygoogle",
+        "style": {
+          "display": "block",
+          "margin": "16px auto",
+          "textAlign": "center"
+        },
+        "attributes": {
+          "data-ad-client": "{{client_id}}",
+          "data-ad-slot": "{{slot_id}}",
+          "data-ad-format": "{{format}}",
+          "data-full-width-responsive": "true"
+        },
+        "load_script": "(window.adsbygoogle = window.adsbygoogle || []).push({});"
+      },
+      "placement_zones": [
+        {
+          "id": "header_ad",
+          "slot": "header_banner",
+          "location": "header",
+          "pages": ["home", "tool", "category"],
+          "priority": 1,
+          "visibility_rules": {
+            "user_type": "all",
+            "device": "all",
+            "timing": "immediate"
+          }
+        },
+        {
+          "id": "tool_sidebar_ad",
+          "slot": "sidebar_vertical",
+          "location": "tool_sidebar",
+          "pages": ["tool"],
+          "priority": 2,
+          "visibility_rules": {
+            "user_type": "free",
+            "device": "desktop",
+            "timing": "after_upload"
+          }
+        },
+        {
+          "id": "mid_content_ad",
+          "slot": "in_content",
+          "location": "mid_content",
+          "pages": ["tool"],
+          "priority": 3,
+          "visibility_rules": {
+            "user_type": "free",
+            "device": "all",
+            "timing": "during_processing"
+          }
+        },
+        {
+          "id": "footer_ad",
+          "slot": "footer_banner",
+          "location": "footer",
+          "pages": ["all"],
+          "priority": 4,
+          "visibility_rules": {
+            "user_type": "free",
+            "device": "desktop",
+            "timing": "always"
+          }
+        },
+        {
+          "id": "mobile_sticky_ad",
+          "slot": "mobile_banner",
+          "location": "mobile_sticky",
+          "pages": ["tool"],
+          "priority": 5,
+          "visibility_rules": {
+            "user_type": "free",
+            "device": "mobile",
+            "timing": "after_upload"
+          }
+        }
+      ]
+    },
+    
+    "affiliate_marketing": {
+      "enabled": true,
+      "partners": [
+        {
+          "name": "Adobe Acrobat Pro",
+          "url": "https://www.adobe.com/acrobat/pricing.html?sdid=KKQIN&mv=affiliate",
+          "commission_rate": "8%",
+          "context_triggers": ["pdf", "document", "text_extraction"],
+          "display_text": "Need advanced PDF editing? Try Adobe Acrobat Pro",
+          "cta": "Get Adobe Acrobat Pro",
+          "placement": "tool_recommendations"
+        },
+        {
+          "name": "Canva Pro",
+          "url": "https://www.canva.com/pro/?utm_source=convertall&utm_medium=affiliate",
+          "commission_rate": "10%",
+          "context_triggers": ["image", "background_removal", "thumbnail"],
+          "display_text": "Create stunning designs with Canva Pro",
+          "cta": "Try Canva Pro Free",
+          "placement": "tool_recommendations"
+        },
+        {
+          "name": "TinyPNG",
+          "url": "https://tinypng.com/developers?ref=convertall",
+          "commission_rate": "20%",
+          "context_triggers": ["image", "compression", "optimization"],
+          "display_text": "Compress images with TinyPNG API",
+          "cta": "Get TinyPNG API",
+          "placement": "tool_recommendations"
+        },
+        {
+          "name": "Cloudinary",
+          "url": "https://cloudinary.com/?utm_source=convertall",
+          "commission_rate": "15%",
+          "context_triggers": ["image", "video", "optimization"],
+          "display_text": "Professional media management with Cloudinary",
+          "cta": "Try Cloudinary",
+          "placement": "pro_alternatives"
+        }
+      ]
+    },
+    
+    "pro_plan": {
+      "enabled": true,
+      "pricing": {
+        "monthly": {
+          "price_usd": 9.99,
+          "stripe_price_id": "price_monthly_pro",
+          "features": [
+            "Ad-free experience",
+            "Unlimited file uploads",
+            "Priority processing (5x faster)",
+            "Higher quality outputs",
+            "Batch processing",
+            "API access",
+            "Advanced format support",
+            "24/7 support"
+          ]
+        },
+        "yearly": {
+          "price_usd": 99.99,
+          "stripe_price_id": "price_yearly_pro",
+          "discount_percentage": 17,
+          "features": [
+            "All monthly features",
+            "2 months free",
+            "Priority feature requests",
+            "Custom integrations"
+          ]
+        }
+      },
+      "upsell_triggers": [
+        {
+          "condition": "file_size_limit_reached",
+          "message": "Upgrade to Pro for unlimited file sizes up to 500MB",
+          "timing": "on_upload_rejection"
+        },
+        {
+          "condition": "daily_limit_reached",
+          "message": "You've reached your daily limit. Upgrade for unlimited conversions",
+          "timing": "on_limit_reached"
+        },
+        {
+          "condition": "queue_wait_time",
+          "message": "Skip the queue with Pro priority processing",
+          "timing": "when_queue_time_over_30s"
+        },
+        {
+          "condition": "multiple_files_uploaded",
+          "message": "Process all files at once with Pro batch processing",
+          "timing": "when_files_count_over_3"
+        },
+        {
+          "condition": "high_quality_requested",
+          "message": "Get maximum quality outputs with Pro",
+          "timing": "on_quality_selection"
+        }
+      ],
+      "trial": {
+        "enabled": true,
+        "duration_days": 7,
+        "requires_payment_method": false
+      }
+    },
+    
+    "freemium_limits": {
+      "free_tier": {
+        "daily_conversions": 10,
+        "max_file_size_mb": 25,
+        "concurrent_uploads": 1,
+        "supported_formats": "basic",
+        "queue_priority": "low",
+        "ads_enabled": true
+      },
+      "pro_tier": {
+        "daily_conversions": "unlimited",
+        "max_file_size_mb": 500,
+        "concurrent_uploads": 10,
+        "supported_formats": "all",
+        "queue_priority": "high",
+        "ads_enabled": false
+      }
+    }
+  },
+  
+  "analytics": {
+    "google_analytics": {
+      "enabled": true,
+      "measurement_id": "G-XXXXXXXXXX",
+      "events": [
+        {
+          "name": "conversion_started",
+          "trigger": "file_upload_success",
+          "parameters": ["tool_id", "file_type", "file_size_mb", "user_tier"]
+        },
+        {
+          "name": "conversion_completed",
+          "trigger": "download_ready",
+          "parameters": ["tool_id", "processing_time_ms", "output_format", "success"]
+        },
+        {
+          "name": "ad_impression",
+          "trigger": "ad_loaded",
+          "parameters": ["slot_id", "page_type", "user_tier"]
+        },
+        {
+          "name": "ad_click",
+          "trigger": "ad_clicked",
+          "parameters": ["slot_id", "page_type", "revenue_estimate"]
+        },
+        {
+          "name": "upgrade_prompt_shown",
+          "trigger": "pro_modal_displayed",
+          "parameters": ["trigger_reason", "tool_id", "user_session_length"]
+        },
+        {
+          "name": "subscription_started",
+          "trigger": "stripe_checkout_success",
+          "parameters": ["plan_type", "price_usd", "trial_used"]
+        },
+        {
+          "name": "affiliate_click",
+          "trigger": "affiliate_link_clicked",
+          "parameters": ["partner_name", "context", "tool_id"]
+        }
+      ]
+    },
+    
+    "hotjar": {
+      "enabled": true,
+      "site_id": "XXXXXXX",
+      "heatmaps": ["home", "tool_pages", "pricing"],
+      "recordings": {
+        "sample_rate": 0.1,
+        "exclude_pages": ["admin", "api"]
+      }
+    },
+    
+    "conversion_tracking": {
+      "facebook_pixel": {
+        "enabled": true,
+        "pixel_id": "XXXXXXXXXXXXXXX",
+        "events": ["Purchase", "Lead", "CompleteRegistration"]
+      },
+      "google_ads": {
+        "enabled": true,
+        "conversion_id": "AW-XXXXXXXXX",
+        "conversion_label": "XXXXXXXXXXXX"
+      }
+    }
+  },
+  
+  "seo_monetization": {
+    "meta_generation": {
+      "enabled": true,
+      "patterns": {
+        "tool_page": "Convert {{input_format}} to {{output_format}} Online Free | ConvertAll Hub",
+        "category_page": "{{category_name}} Conversion Tools | Free Online Converters",
+        "home_page": "ConvertAll Hub - Free Online File Conversion Tools"
+      }
+    },
+    "schema_markup": {
+      "enabled": true,
+      "types": ["SoftwareApplication", "WebApplication", "Product"],
+      "include_pricing": true,
+      "include_reviews": true
+    },
+    "content_optimization": {
+      "auto_generate_descriptions": true,
+      "include_conversion_keywords": true,
+      "add_tool_comparisons": true
+    }
+  },
+  
+  "compliance": {
+    "gdpr": {
+      "enabled": true,
+      "cookie_consent": true,
+      "data_retention_days": 365,
+      "privacy_policy_required": true
+    },
+    "ccpa": {
+      "enabled": true,
+      "do_not_sell_option": true
+    },
+    "content_policy": {
+      "blocked_keywords": [
+        "youtube-dl", "youtube downloader", "tiktok downloader",
+        "spotify ripper", "netflix", "copyrighted content"
+      ],
+      "file_type_restrictions": [
+        "executable files", "system files", "encrypted files"
+      ]
+    },
+    "terms_of_service": {
+      "required": true,
+      "includes_monetization_disclosure": true,
+      "affiliate_disclosure": true
+    }
+  },
+  
+  "performance_optimization": {
+    "ad_loading": {
+      "lazy_load": true,
+      "intersection_observer": true,
+      "refresh_on_route_change": true,
+      "refresh_delay_ms": 1500
+    },
+    "analytics_loading": {
+      "defer_scripts": true,
+      "load_after_interaction": true
+    },
+    "caching": {
+      "ad_scripts_ttl_minutes": 60,
+      "analytics_buffer_size": 100,
+      "affiliate_data_ttl_hours": 24
+    }
+  },
+  
+  "testing": {
+    "ab_tests": [
+      {
+        "name": "ad_placement_test",
+        "variants": ["sidebar_ads", "inline_ads", "minimal_ads"],
+        "metric": "revenue_per_user",
+        "traffic_split": [0.4, 0.4, 0.2]
+      },
+      {
+        "name": "pricing_test",
+        "variants": ["$9.99", "$7.99", "$12.99"],
+        "metric": "conversion_rate",
+        "traffic_split": [0.33, 0.33, 0.34]
+      },
+      {
+        "name": "upsell_timing_test",
+        "variants": ["immediate", "after_first_conversion", "after_limit_reached"],
+        "metric": "upgrade_rate",
+        "traffic_split": [0.33, 0.33, 0.34]
+      }
+    ]
+  },
+  
+  "automation_hooks": {
+    "revenue_alerts": {
+      "daily_revenue_drop_threshold": 0.2,
+      "ad_performance_threshold": 0.1,
+      "webhook_url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+    },
+    "optimization_triggers": {
+      "low_ctr_ad_replacement": true,
+      "underperforming_affiliate_removal": true,
+      "automatic_pricing_adjustments": false
+    }
+  }
+}

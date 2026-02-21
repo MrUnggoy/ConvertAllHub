@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Auto GitHub Commit",
+  "description": "Automatically stages all changes, commits with a timestamp message, and pushes to GitHub",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "git add . && git commit -m \"Auto commit: $(date '+%Y-%m-%d %H:%M:%S')\" && git push",
+    "timeout": 120
+  }
+}

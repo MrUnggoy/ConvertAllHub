@@ -1,0 +1,451 @@
+{
+  "project": "Digital Empire Master Plan",
+  "owner": "Bryce Edwards",
+  "version": "1.0",
+  "purpose": "Unified roadmap for all passive-income web properties (utility, AI, and educational hubs).",
+  "created": "2024-10-26",
+  "last_updated": "2024-10-26",
+  
+  "infrastructure": {
+    "frontend": "React + TypeScript + Vite + Tailwind + Shadcn/UI",
+    "backend": "FastAPI (Python 3.11) + PostgreSQL + Redis",
+    "cdn_storage": "Cloudflare R2 or AWS S3",
+    "auth": "JWT-based optional Pro tier login",
+    "payments": "Stripe (Subscriptions + One-time)",
+    "ads": "Google AdSense / Ezoic",
+    "analytics": "Plausible + GA4 unified tracking",
+    "deployment": {
+      "frontend": "Cloudflare Pages",
+      "backend": "Render or Fly.io",
+      "monitoring": "UptimeRobot + Logtail + Error tracking"
+    }
+  },
+  
+  "hubs": [
+    {
+      "id": "convertall",
+      "name": "ConvertAll Universal Converter",
+      "category": "File Utilities",
+      "launch_phase": 1,
+      "monetization": ["Ads", "Freemium", "Affiliate"],
+      "goal_users": 300000,
+      "rpm_estimate": 8,
+      "target_income": 2400,
+      "priority": "high",
+      "status": "in_development",
+      "completion_percentage": 35,
+      "domain": "convertall.io",
+      "tech_stack": {
+        "frontend": "React + TypeScript + Vite",
+        "backend": "FastAPI + Python",
+        "features": ["PDF conversion", "Image conversion", "Audio/Video conversion", "Text processing", "OCR", "QR codes"]
+      },
+      "key_features": [
+        "Universal file converter",
+        "Client-side processing where possible",
+        "Batch processing for Pro users",
+        "API access for developers"
+      ]
+    },
+    {
+      "id": "ai_text_rewriter",
+      "name": "AI Text Rewriter / Summarizer",
+      "category": "AI Tools",
+      "launch_phase": 1,
+      "monetization": ["Ads", "Usage Credits", "Subscription"],
+      "goal_users": 150000,
+      "rpm_estimate": 10,
+      "target_income": 1500,
+      "priority": "high",
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "textai.tools",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI + OpenAI/Claude API",
+        "features": ["Text rewriting", "Summarization", "Grammar checking", "Tone adjustment", "Plagiarism detection"]
+      },
+      "key_features": [
+        "AI-powered text rewriting",
+        "Multiple writing styles",
+        "Bulk text processing",
+        "Export to multiple formats"
+      ]
+    },
+    {
+      "id": "ai_image_enhancer",
+      "name": "AI Image Enhancer / Background Replacer",
+      "category": "AI Tools",
+      "launch_phase": 2,
+      "monetization": ["Freemium", "Ads"],
+      "goal_users": 100000,
+      "rpm_estimate": 12,
+      "target_income": 1200,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "imageai.tools",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI + Replicate/RunPod",
+        "features": ["Background removal", "Image upscaling", "Style transfer", "Object removal", "Face enhancement"]
+      }
+    },
+    {
+      "id": "temp_email",
+      "name": "Privacy Temp Mail Generator",
+      "category": "Privacy Tools",
+      "launch_phase": 2,
+      "monetization": ["Ads", "Premium Domains"],
+      "goal_users": 250000,
+      "rpm_estimate": 7,
+      "target_income": 1750,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "tempmail.ninja",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI + Email Server",
+        "features": ["Temporary email generation", "Email forwarding", "Custom domains", "Email history", "Mobile app"]
+      }
+    },
+    {
+      "id": "freelancer_toolkit",
+      "name": "Freelancer Toolkit Hub",
+      "category": "Business Utilities",
+      "launch_phase": 3,
+      "monetization": ["Affiliate", "Ads"],
+      "goal_users": 75000,
+      "rpm_estimate": 9,
+      "target_income": 675,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "freelancertoolkit.com",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI",
+        "features": ["Invoice generator", "Time tracker", "Contract templates", "Rate calculator", "Tax calculator"]
+      }
+    },
+    {
+      "id": "seo_utility_hub",
+      "name": "SEO Utility Hub",
+      "category": "Marketing Tools",
+      "launch_phase": 3,
+      "monetization": ["Ads", "Affiliate"],
+      "goal_users": 75000,
+      "rpm_estimate": 10,
+      "target_income": 750,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "seotools.ninja",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI + Web Scraping",
+        "features": ["Keyword research", "Backlink checker", "Site audit", "Meta tag generator", "Schema markup generator"]
+      }
+    },
+    {
+      "id": "travel_visa_checker",
+      "name": "Travel Visa Checker",
+      "category": "Travel Information",
+      "launch_phase": 3,
+      "monetization": ["Ads", "Affiliate (insurance/flights)"],
+      "goal_users": 100000,
+      "rpm_estimate": 12,
+      "target_income": 1200,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "visachecker.travel",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI + Government APIs",
+        "features": ["Visa requirements checker", "Travel alerts", "Embassy finder", "Document checklist", "Travel insurance comparison"]
+      }
+    },
+    {
+      "id": "baby_name_explorer",
+      "name": "Baby Name Popularity Explorer",
+      "category": "Lifestyle",
+      "launch_phase": 4,
+      "monetization": ["Ads", "Affiliate (Baby Products)"],
+      "goal_users": 150000,
+      "rpm_estimate": 8,
+      "target_income": 1200,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "babynames.explorer",
+      "tech_stack": {
+        "frontend": "React + TypeScript + D3.js",
+        "backend": "FastAPI + Name Database",
+        "features": ["Name popularity trends", "Name meaning lookup", "Similar names finder", "Celebrity baby names", "Name generator"]
+      }
+    },
+    {
+      "id": "data_visualizer",
+      "name": "CSV / JSON Data Visualizer",
+      "category": "Developer Tools",
+      "launch_phase": 4,
+      "monetization": ["Ads", "Pro Downloads"],
+      "goal_users": 50000,
+      "rpm_estimate": 8,
+      "target_income": 400,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "datavis.tools",
+      "tech_stack": {
+        "frontend": "React + TypeScript + D3.js + Chart.js",
+        "backend": "FastAPI",
+        "features": ["CSV/JSON upload", "Interactive charts", "Data cleaning", "Export options", "Sharing capabilities"]
+      }
+    },
+    {
+      "id": "smart_calculator_hub",
+      "name": "Smart Calculator Hub",
+      "category": "Productivity",
+      "launch_phase": 5,
+      "monetization": ["Ads", "Affiliate (Finance)"],
+      "goal_users": 50000,
+      "rpm_estimate": 8,
+      "target_income": 400,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "smartcalc.tools",
+      "tech_stack": {
+        "frontend": "React + TypeScript",
+        "backend": "FastAPI",
+        "features": ["Mortgage calculator", "Investment calculator", "Tax calculator", "Unit converter", "Scientific calculator"]
+      }
+    },
+    {
+      "id": "moobies_world",
+      "name": "Moobie's World Learning Hub",
+      "category": "Educational Entertainment",
+      "launch_phase": 5,
+      "monetization": ["Freemium", "Merch", "Ads"],
+      "goal_users": 100000,
+      "rpm_estimate": 10,
+      "target_income": 1000,
+      "status": "planned",
+      "completion_percentage": 0,
+      "domain": "moobiesworld.com",
+      "tech_stack": {
+        "frontend": "React + TypeScript + Three.js",
+        "backend": "FastAPI + Content Management",
+        "features": ["Interactive learning games", "Progress tracking", "Parental dashboard", "Offline mode", "Merchandise store"]
+      }
+    }
+  ],
+  
+  "shared_modules": {
+    "ads_component": {
+      "description": "AdZone system with slot control (Top, Mid, Bottom)",
+      "status": "implemented",
+      "location": "src/components/monetization/AdZone.tsx",
+      "features": ["Smart placement", "User tier awareness", "Performance tracking"]
+    },
+    "analytics_hook": {
+      "description": "useAnalytics() for GA4 + Plausible events",
+      "status": "implemented", 
+      "location": "src/hooks/useAnalytics.ts",
+      "features": ["Event tracking", "Conversion tracking", "Revenue attribution"]
+    },
+    "affiliate_engine": {
+      "description": "Context-based banner injection from config JSON",
+      "status": "implemented",
+      "location": "src/components/monetization/AffiliateRecommendations.tsx",
+      "features": ["Contextual recommendations", "Click tracking", "Revenue optimization"]
+    },
+    "user_account_system": {
+      "description": "Optional login for Pro features",
+      "status": "planned",
+      "location": "backend/routers/auth.py",
+      "features": ["JWT authentication", "Pro tier management", "Usage tracking"]
+    },
+    "billing": {
+      "description": "Stripe Subscriptions via unified API",
+      "status": "partially_implemented",
+      "location": "src/components/monetization/ProUpgradeModal.tsx",
+      "features": ["Subscription management", "Usage billing", "Dunning management"]
+    },
+    "seo_manager": {
+      "description": "Auto-meta generator + sitemap + schema markup",
+      "status": "planned",
+      "features": ["Dynamic meta tags", "Sitemap generation", "Schema markup", "Open Graph tags"]
+    },
+    "deployment_pipeline": {
+      "description": "Git-based CI/CD triggering Vercel/Render deploys",
+      "status": "planned",
+      "features": ["Automated deployments", "Environment management", "Rollback capabilities"]
+    }
+  },
+  
+  "milestones": [
+    {
+      "phase": 1,
+      "timeline": "0–3 months",
+      "deliverables": ["ConvertAll", "AI Text Rewriter"],
+      "target_income": 500,
+      "status": "in_progress",
+      "key_objectives": [
+        "Complete ConvertAll MVP with core conversion tools",
+        "Launch AI Text Rewriter with OpenAI integration",
+        "Implement monetization system (ads + freemium)",
+        "Achieve first $500/month in combined revenue"
+      ]
+    },
+    {
+      "phase": 2,
+      "timeline": "3–6 months",
+      "deliverables": ["AI Image Enhancer", "Temp Email"],
+      "target_income": 1500,
+      "status": "planned",
+      "key_objectives": [
+        "Launch AI Image Enhancer with background removal",
+        "Deploy Temp Email service with custom domains",
+        "Scale ConvertAll to 100k+ monthly users",
+        "Optimize ad revenue and conversion rates"
+      ]
+    },
+    {
+      "phase": 3,
+      "timeline": "6–9 months",
+      "deliverables": ["Freelancer Toolkit", "SEO Hub", "Visa Checker"],
+      "target_income": 4000,
+      "status": "planned",
+      "key_objectives": [
+        "Launch 3 new utility hubs",
+        "Implement cross-platform user accounts",
+        "Achieve $4k/month milestone",
+        "Begin Ezoic/Mediavine optimization"
+      ]
+    },
+    {
+      "phase": 4,
+      "timeline": "9–12 months",
+      "deliverables": ["Baby Name Explorer", "Data Visualizer"],
+      "target_income": 7000,
+      "status": "planned",
+      "key_objectives": [
+        "Launch lifestyle and developer tools",
+        "Implement API monetization strategy",
+        "Scale to 1M+ combined monthly users",
+        "Approach financial independence threshold"
+      ]
+    },
+    {
+      "phase": 5,
+      "timeline": "12–18 months",
+      "deliverables": ["Smart Calculator Hub", "Moobie's World"],
+      "target_income": 10000,
+      "status": "planned",
+      "key_objectives": [
+        "Complete all 11 hub launches",
+        "Achieve $10k/month sustainable income",
+        "Implement exit strategy preparation",
+        "Launch API SaaS offerings"
+      ]
+    }
+  ],
+  
+  "long_term_goals": {
+    "quit_job_target": "When portfolio income >= $6K/month for 3 consecutive months",
+    "scaling_plan": "Bundle traffic under one Ezoic/Mediavine account to increase RPM network-wide",
+    "exit_strategy": "Sell individual sites (20×–36× profit) or package as SaaS portfolio",
+    "api_saas_goal": "Expose ConvertAll and AI tools via paid API gateway for developers"
+  },
+  
+  "revenue_projections": {
+    "phase_1": {
+      "timeline": "Month 3",
+      "target": 500,
+      "sources": {
+        "ads": 200,
+        "subscriptions": 250,
+        "affiliate": 50
+      }
+    },
+    "phase_2": {
+      "timeline": "Month 6", 
+      "target": 1500,
+      "sources": {
+        "ads": 600,
+        "subscriptions": 700,
+        "affiliate": 200
+      }
+    },
+    "phase_3": {
+      "timeline": "Month 9",
+      "target": 4000,
+      "sources": {
+        "ads": 1600,
+        "subscriptions": 1800,
+        "affiliate": 600
+      }
+    },
+    "phase_4": {
+      "timeline": "Month 12",
+      "target": 7000,
+      "sources": {
+        "ads": 2800,
+        "subscriptions": 3200,
+        "affiliate": 1000
+      }
+    },
+    "phase_5": {
+      "timeline": "Month 18",
+      "target": 10000,
+      "sources": {
+        "ads": 4000,
+        "subscriptions": 4500,
+        "affiliate": 1500
+      }
+    }
+  },
+  
+  "success_metrics": {
+    "traffic": {
+      "phase_1_target": "50k monthly users",
+      "phase_2_target": "200k monthly users", 
+      "phase_3_target": "500k monthly users",
+      "phase_4_target": "1M monthly users",
+      "phase_5_target": "2M+ monthly users"
+    },
+    "conversion_rates": {
+      "free_to_paid": "2-5%",
+      "ad_ctr": "1-3%",
+      "affiliate_ctr": "3-8%"
+    },
+    "financial_independence": {
+      "target_monthly_income": 6000,
+      "consecutive_months_required": 3,
+      "safety_buffer": 1.5
+    }
+  },
+  
+  "risk_mitigation": {
+    "technical_risks": [
+      "API rate limits and costs",
+      "Server scaling challenges", 
+      "Third-party service dependencies"
+    ],
+    "business_risks": [
+      "Ad revenue fluctuations",
+      "Increased competition",
+      "Regulatory changes"
+    ],
+    "mitigation_strategies": [
+      "Diversified revenue streams",
+      "Multiple traffic sources",
+      "Automated scaling infrastructure",
+      "Regular backups and monitoring"
+    ]
+  },
+  
+  "automation_opportunities": {
+    "content_generation": "AI-powered SEO content for each hub",
+    "social_media": "Automated posting and engagement",
+    "customer_support": "Chatbot integration across all hubs",
+    "analytics_reporting": "Automated revenue and traffic reports",
+    "a_b_testing": "Automated conversion optimization"
+  }
+}
