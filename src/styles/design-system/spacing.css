@@ -1,0 +1,193 @@
+/**
+ * Design System - Spacing
+ * Consistent spacing scale for margins, padding, and gaps
+ * Validates: Requirements 11.3 (Consistent spacing)
+ */
+
+:root {
+  /* Base Spacing Unit (4px) */
+  --spacing-unit: 0.25rem;
+
+  /* Spacing Scale - Based on 4px increments */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0-5: calc(var(--spacing-unit) * 0.5);  /* 2px */
+  --spacing-1: calc(var(--spacing-unit) * 1);      /* 4px */
+  --spacing-1-5: calc(var(--spacing-unit) * 1.5);  /* 6px */
+  --spacing-2: calc(var(--spacing-unit) * 2);      /* 8px */
+  --spacing-2-5: calc(var(--spacing-unit) * 2.5);  /* 10px */
+  --spacing-3: calc(var(--spacing-unit) * 3);      /* 12px */
+  --spacing-3-5: calc(var(--spacing-unit) * 3.5);  /* 14px */
+  --spacing-4: calc(var(--spacing-unit) * 4);      /* 16px */
+  --spacing-5: calc(var(--spacing-unit) * 5);      /* 20px */
+  --spacing-6: calc(var(--spacing-unit) * 6);      /* 24px */
+  --spacing-7: calc(var(--spacing-unit) * 7);      /* 28px */
+  --spacing-8: calc(var(--spacing-unit) * 8);      /* 32px */
+  --spacing-9: calc(var(--spacing-unit) * 9);      /* 36px */
+  --spacing-10: calc(var(--spacing-unit) * 10);    /* 40px */
+  --spacing-11: calc(var(--spacing-unit) * 11);    /* 44px */
+  --spacing-12: calc(var(--spacing-unit) * 12);    /* 48px */
+  --spacing-14: calc(var(--spacing-unit) * 14);    /* 56px */
+  --spacing-16: calc(var(--spacing-unit) * 16);    /* 64px */
+  --spacing-20: calc(var(--spacing-unit) * 20);    /* 80px */
+  --spacing-24: calc(var(--spacing-unit) * 24);    /* 96px */
+  --spacing-28: calc(var(--spacing-unit) * 28);    /* 112px */
+  --spacing-32: calc(var(--spacing-unit) * 32);    /* 128px */
+  --spacing-36: calc(var(--spacing-unit) * 36);    /* 144px */
+  --spacing-40: calc(var(--spacing-unit) * 40);    /* 160px */
+  --spacing-44: calc(var(--spacing-unit) * 44);    /* 176px */
+  --spacing-48: calc(var(--spacing-unit) * 48);    /* 192px */
+  --spacing-52: calc(var(--spacing-unit) * 52);    /* 208px */
+  --spacing-56: calc(var(--spacing-unit) * 56);    /* 224px */
+  --spacing-60: calc(var(--spacing-unit) * 60);    /* 240px */
+  --spacing-64: calc(var(--spacing-unit) * 64);    /* 256px */
+  --spacing-72: calc(var(--spacing-unit) * 72);    /* 288px */
+  --spacing-80: calc(var(--spacing-unit) * 80);    /* 320px */
+  --spacing-96: calc(var(--spacing-unit) * 96);    /* 384px */
+
+  /* Semantic Spacing - Component-Specific */
+  --spacing-section-sm: var(--spacing-12);         /* 48px */
+  --spacing-section-md: var(--spacing-16);         /* 64px */
+  --spacing-section-lg: var(--spacing-24);         /* 96px */
+  --spacing-section-xl: var(--spacing-32);         /* 128px */
+
+  --spacing-container-sm: var(--spacing-4);        /* 16px */
+  --spacing-container-md: var(--spacing-6);        /* 24px */
+  --spacing-container-lg: var(--spacing-8);        /* 32px */
+
+  --spacing-card-sm: var(--spacing-4);             /* 16px */
+  --spacing-card-md: var(--spacing-6);             /* 24px */
+  --spacing-card-lg: var(--spacing-8);             /* 32px */
+
+  --spacing-button-x-sm: var(--spacing-3);         /* 12px */
+  --spacing-button-y-sm: var(--spacing-2);         /* 8px */
+  --spacing-button-x-md: var(--spacing-4);         /* 16px */
+  --spacing-button-y-md: var(--spacing-2-5);       /* 10px */
+  --spacing-button-x-lg: var(--spacing-6);         /* 24px */
+  --spacing-button-y-lg: var(--spacing-3);         /* 12px */
+
+  --spacing-input-x: var(--spacing-3);             /* 12px */
+  --spacing-input-y: var(--spacing-2-5);           /* 10px */
+
+  --spacing-gap-xs: var(--spacing-1);              /* 4px */
+  --spacing-gap-sm: var(--spacing-2);              /* 8px */
+  --spacing-gap-md: var(--spacing-4);              /* 16px */
+  --spacing-gap-lg: var(--spacing-6);              /* 24px */
+  --spacing-gap-xl: var(--spacing-8);              /* 32px */
+
+  /* Touch Target Minimum (44px for accessibility) */
+  --touch-target-min: var(--spacing-11);           /* 44px */
+
+  /* Safe Area Insets for Mobile Devices */
+  --safe-area-top: env(safe-area-inset-top, 0);
+  --safe-area-right: env(safe-area-inset-right, 0);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0);
+  --safe-area-left: env(safe-area-inset-left, 0);
+}
+
+/* Spacing Utility Classes */
+
+/* Margin Utilities */
+.m-0 { margin: var(--spacing-0); }
+.m-1 { margin: var(--spacing-1); }
+.m-2 { margin: var(--spacing-2); }
+.m-3 { margin: var(--spacing-3); }
+.m-4 { margin: var(--spacing-4); }
+.m-5 { margin: var(--spacing-5); }
+.m-6 { margin: var(--spacing-6); }
+.m-8 { margin: var(--spacing-8); }
+.m-10 { margin: var(--spacing-10); }
+.m-12 { margin: var(--spacing-12); }
+.m-16 { margin: var(--spacing-16); }
+.m-auto { margin: auto; }
+
+/* Padding Utilities */
+.p-0 { padding: var(--spacing-0); }
+.p-1 { padding: var(--spacing-1); }
+.p-2 { padding: var(--spacing-2); }
+.p-3 { padding: var(--spacing-3); }
+.p-4 { padding: var(--spacing-4); }
+.p-5 { padding: var(--spacing-5); }
+.p-6 { padding: var(--spacing-6); }
+.p-8 { padding: var(--spacing-8); }
+.p-10 { padding: var(--spacing-10); }
+.p-12 { padding: var(--spacing-12); }
+.p-16 { padding: var(--spacing-16); }
+
+/* Gap Utilities */
+.gap-xs { gap: var(--spacing-gap-xs); }
+.gap-sm { gap: var(--spacing-gap-sm); }
+.gap-md { gap: var(--spacing-gap-md); }
+.gap-lg { gap: var(--spacing-gap-lg); }
+.gap-xl { gap: var(--spacing-gap-xl); }
+
+/* Section Spacing */
+.section-spacing-sm { padding-block: var(--spacing-section-sm); }
+.section-spacing-md { padding-block: var(--spacing-section-md); }
+.section-spacing-lg { padding-block: var(--spacing-section-lg); }
+.section-spacing-xl { padding-block: var(--spacing-section-xl); }
+
+/* Container Spacing */
+.container-spacing-sm { padding-inline: var(--spacing-container-sm); }
+.container-spacing-md { padding-inline: var(--spacing-container-md); }
+.container-spacing-lg { padding-inline: var(--spacing-container-lg); }
+
+/* Touch Target Minimum Size */
+.touch-target {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+}
+
+/* Safe Area Utilities for Mobile */
+.safe-top { padding-top: var(--safe-area-top); }
+.safe-right { padding-right: var(--safe-area-right); }
+.safe-bottom { padding-bottom: var(--safe-area-bottom); }
+.safe-left { padding-left: var(--safe-area-left); }
+.safe-x { 
+  padding-left: var(--safe-area-left);
+  padding-right: var(--safe-area-right);
+}
+.safe-y { 
+  padding-top: var(--safe-area-top);
+  padding-bottom: var(--safe-area-bottom);
+}
+.safe-all { 
+  padding-top: var(--safe-area-top);
+  padding-right: var(--safe-area-right);
+  padding-bottom: var(--safe-area-bottom);
+  padding-left: var(--safe-area-left);
+}
+
+/* Responsive Spacing Adjustments */
+@media (min-width: 768px) {
+  :root {
+    --spacing-section-sm: var(--spacing-16);       /* 64px */
+    --spacing-section-md: var(--spacing-24);       /* 96px */
+    --spacing-section-lg: var(--spacing-32);       /* 128px */
+    --spacing-section-xl: var(--spacing-48);       /* 192px */
+
+    --spacing-container-sm: var(--spacing-6);      /* 24px */
+    --spacing-container-md: var(--spacing-8);      /* 32px */
+    --spacing-container-lg: var(--spacing-12);     /* 48px */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --spacing-section-sm: var(--spacing-20);       /* 80px */
+    --spacing-section-md: var(--spacing-32);       /* 128px */
+    --spacing-section-lg: var(--spacing-48);       /* 192px */
+    --spacing-section-xl: var(--spacing-64);       /* 256px */
+
+    --spacing-container-sm: var(--spacing-8);      /* 32px */
+    --spacing-container-md: var(--spacing-12);     /* 48px */
+    --spacing-container-lg: var(--spacing-16);     /* 64px */
+  }
+}
+
+/* Stack Layout Utilities */
+.stack-xs > * + * { margin-top: var(--spacing-gap-xs); }
+.stack-sm > * + * { margin-top: var(--spacing-gap-sm); }
+.stack-md > * + * { margin-top: var(--spacing-gap-md); }
+.stack-lg > * + * { margin-top: var(--spacing-gap-lg); }
+.stack-xl > * + * { margin-top: var(--spacing-gap-xl); }
