@@ -219,12 +219,21 @@ export default function FileUpload({
     fileInputRef.current?.click()
   }
 
+  // Keyboard handler for upload zone
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleClick()
+    }
+  }
+
   return (
     <div className={cn("space-y-4", className)}>
       {/* Upload Zone */}
       <div
         className={cn(
           "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
+          "focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2",
           isDragOver 
             ? "border-primary bg-primary/5" 
             : "border-muted-foreground/25 hover:border-primary/50 hover:bg-accent/50"
@@ -234,6 +243,10 @@ export default function FileUpload({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-label={`Upload ${tool.inputFormats.join(', ')} files. Drop files here or press Enter to browse.`}
       >
         <input
           ref={fileInputRef}
@@ -256,9 +269,10 @@ export default function FileUpload({
           }).join(',')}
           onChange={handleFileInput}
           className="hidden"
+          aria-label={`File input for ${tool.name}`}
         />
         
-        <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+        <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
         
         <div className="space-y-2">
           <p className="text-lg font-medium">

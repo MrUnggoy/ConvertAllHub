@@ -1,6 +1,8 @@
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toolRegistry } from '@/tools/registry'
+import MetaTags from '@/components/seo/MetaTags'
+import SchemaMarkup, { createItemListSchema } from '@/components/seo/SchemaMarkup'
 
 const categoryNames = {
   pdf: 'PDF Tools',
@@ -48,8 +50,43 @@ export default function CategoryPage() {
   const categoryName = categoryNames[category as keyof typeof categoryNames] || category
   const categoryDescription = categoryDescriptions[category as keyof typeof categoryDescriptions] || ''
 
+  // SEO data for category page
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://convertall.hub'
+  const categoryUrl = `${baseUrl}/category/${category}`
+  const seoTitle = `${categoryName} - Free Online ${categoryName} | ConvertAll Hub`
+  const seoDescription = `Free online ${category} conversion tools. ${tools.length} powerful ${category} converters and processors. ${categoryDescription}. Fast, secure, and privacy-focused.`
+  const seoKeywords = [
+    category,
+    'converter',
+    'online',
+    'free',
+    'tools',
+    ...tools.flatMap(t => t.inputFormats.map(f => f.toLowerCase()))
+  ]
+
+  // Schema markup for category page
+  const itemListSchema = createItemListSchema(
+    tools.map(tool => ({
+      name: tool.name,
+      description: tool.description,
+      url: `${baseUrl}/tool/${tool.id}`
+    }))
+  )
+
   return (
     <div className="space-y-8">
+      {/* SEO Meta Tags */}
+      <MetaTags
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        canonicalUrl={categoryUrl}
+        type="website"
+      />
+
+      {/* Schema Markup */}
+      <SchemaMarkup type="ItemList" data={itemListSchema} />
+
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight">{categoryName}</h1>
         {categoryDescription && (

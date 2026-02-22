@@ -1,4 +1,10 @@
 // Google Analytics 4 and AdSense Integration
+// PRIVACY NOTE: This analytics implementation NEVER tracks:
+// - File names, file contents, or any file metadata
+// - Personal information or user identifiers
+// - IP addresses (anonymized by GA4)
+// Only tracks: page views, tool usage (by tool ID), and conversion events
+
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'
 export const ADSENSE_CLIENT_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-XXXXXXXXXXXXXXX'
 
@@ -23,13 +29,17 @@ export const initializeAnalytics = () => {
   gtag('config', GA_MEASUREMENT_ID, {
     page_title: document.title,
     page_location: window.location.href,
-    send_page_view: true
+    send_page_view: true,
+    // Privacy-enhanced settings
+    anonymize_ip: true, // Anonymize IP addresses
+    allow_google_signals: false, // Disable cross-device tracking
+    allow_ad_personalization_signals: false // Disable ad personalization
   })
 
   // Set session start time
   window.sessionStart = Date.now()
   
-  console.log('📊 Analytics initialized:', GA_MEASUREMENT_ID)
+  console.log('📊 Analytics initialized (privacy-enhanced):', GA_MEASUREMENT_ID)
 }
 
 // Initialize AdSense
@@ -58,13 +68,23 @@ export const trackRevenue = (eventName: string, value: number, currency = 'USD')
 }
 
 // Track conversion funnel
+// PRIVACY: Only tracks tool ID and funnel step, never file data
 export const trackConversionFunnel = (step: string, toolId: string, additionalData?: Record<string, any>) => {
   if (window.gtag) {
+    // Filter out any potential file-related data from additionalData
+    const safeData = additionalData ? Object.fromEntries(
+      Object.entries(additionalData).filter(([key]) => 
+        !key.toLowerCase().includes('file') && 
+        !key.toLowerCase().includes('name') &&
+        !key.toLowerCase().includes('content')
+      )
+    ) : {}
+    
     window.gtag('event', 'conversion_funnel', {
       funnel_step: step,
       tool_id: toolId,
       event_category: 'conversion',
-      ...additionalData
+      ...safeData
     })
   }
 }

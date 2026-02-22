@@ -1,4 +1,4 @@
-import { LucideIcon, FileText, Image, Eye } from 'lucide-react'
+import { LucideIcon, FileText, Image, Eye, Scissors, Minimize2 } from 'lucide-react'
 import { lazy, ComponentType } from 'react'
 
 export interface ToolDefinition {
@@ -68,16 +68,29 @@ class ConvertAllToolRegistry implements ToolRegistry {
     })
 
     this.registerTool({
+      id: 'pdf-splitter',
+      name: 'PDF Splitter',
+      category: 'pdf',
+      description: 'Split PDF documents into separate files by selecting pages or page ranges',
+      inputFormats: ['PDF'],
+      outputFormats: ['PDF', 'ZIP'],
+      clientSideSupported: true,
+      proFeatures: ['Batch splitting', 'Custom naming', 'Advanced page selection'],
+      icon: Scissors,
+      component: lazy(() => import('@/components/tools/PdfSplitterTool'))
+    })
+
+    this.registerTool({
       id: 'document-to-pdf',
       name: 'Document to PDF',
       category: 'pdf',
-      description: 'Convert text files, images, and HTML to PDF format',
-      inputFormats: ['TXT', 'HTML', 'JPG', 'PNG', 'WEBP', 'GIF'],
+      description: 'Convert text files, images, HTML, and Word documents to PDF format',
+      inputFormats: ['TXT', 'HTML', 'DOCX', 'DOC', 'JPG', 'PNG', 'WEBP', 'GIF'],
       outputFormats: ['PDF'],
       clientSideSupported: true,
       proFeatures: ['Batch conversion', 'Custom formatting', 'Advanced layouts'],
       icon: FileText,
-      component: lazy(() => import('@/components/PlaceholderTool'))
+      component: lazy(() => import('@/components/tools/DocumentToPdfTool'))
     })
 
     // Image tools - Working
@@ -107,9 +120,21 @@ class ConvertAllToolRegistry implements ToolRegistry {
       component: lazy(() => import('@/components/tools/BackgroundRemovalTool'))
     })
 
+    this.registerTool({
+      id: 'image-compressor',
+      name: 'Image Compressor',
+      category: 'image',
+      description: 'Reduce image file size while maintaining visual quality with adjustable compression',
+      inputFormats: ['JPG', 'PNG', 'WEBP', 'GIF'],
+      outputFormats: ['JPG', 'PNG', 'WEBP'],
+      clientSideSupported: true,
+      proFeatures: ['Batch compression', 'Advanced quality presets', 'Larger file support'],
+      icon: Minimize2,
+      component: lazy(() => import('@/components/tools/ImageCompressorTool'))
+    })
+
     // Coming soon - these will be added as they're completed:
     // - Document to PDF converter
-    // - PDF splitter
     // - Audio converter
     // - Video converter  
     // - Text formatter

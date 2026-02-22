@@ -30,6 +30,183 @@
     min-width: 44px;
   }
 
+  /* Premium Animations */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 1;
+      filter: blur(20px);
+    }
+    50% {
+      opacity: 0.8;
+      filter: blur(25px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  @keyframes border-flow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow-pulse 4s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s linear infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.8s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.5s ease-out;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Premium Gradients */
+  .gradient-premium-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .gradient-premium-purple {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  .gradient-premium-ocean {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  .gradient-premium-sunset {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  }
+
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 200% 200%;
+  }
+
+  /* Premium Shadows */
+  .shadow-premium {
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.03),
+      0 1px 2px rgba(0, 0, 0, 0.05),
+      0 4px 8px rgba(0, 0, 0, 0.08),
+      0 16px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-premium-lg {
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.03),
+      0 2px 4px rgba(0, 0, 0, 0.05),
+      0 8px 16px rgba(0, 0, 0, 0.1),
+      0 24px 48px rgba(0, 0, 0, 0.15);
+  }
+
+  .shadow-glow-blue {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.4), 0 0 40px rgba(102, 126, 234, 0.2);
+  }
+
+  .shadow-glow-purple {
+    box-shadow: 0 0 20px rgba(118, 75, 162, 0.4), 0 0 40px rgba(118, 75, 162, 0.2);
+  }
+
+  .shadow-glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.2);
+  }
+
   /* Prevent zoom on input focus (iOS) */
   .no-zoom {
     font-size: 16px;
@@ -60,9 +237,40 @@
     line-height: 1.6;
     /* Smooth theme transitions */
     transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
   }
 
+  /* Premium Typography */
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
 
+  h1 {
+    letter-spacing: -0.03em;
+  }
+
+  /* Accessibility: Visible focus indicators for keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  /* Remove default focus outline but keep for keyboard users */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Ensure buttons and interactive elements have visible focus */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
 
   /* Softer shadows */
   .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); }

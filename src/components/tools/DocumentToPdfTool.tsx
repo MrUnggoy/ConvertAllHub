@@ -1,9 +1,10 @@
 import { useState, useCallback, useRef } from 'react'
-import { Download, FileText, Upload } from 'lucide-react'
+import { Download, FileText, Upload, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ToolDefinition } from '@/tools/registry'
 import { jsPDF } from 'jspdf'
+import mammoth from 'mammoth'
 
 interface DocumentToPdfToolProps {
   tool: ToolDefinition
@@ -14,15 +15,17 @@ interface ProcessedFile {
   name: string
   originalFile: File
   content: string | HTMLImageElement
-  type: 'text' | 'image' | 'html'
+  type: 'text' | 'image' | 'html' | 'docx'
   pdfUrl?: string
   status: 'pending' | 'processing' | 'completed' | 'error'
   error?: string
+  warnings?: string[]
 }
 
 export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
   const [files, setFiles] = useState<ProcessedFile[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
+  const [previewFile, setPreviewFile] = useState<ProcessedFile | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,10 +39,30 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
       const fileId = `${Date.now()}-${i}`
       
       try {
-        let content: string | HTMLImageElement = ''
-        let type: 'text' | 'image' | 'html' = 'text'
+        // Validate file type
+        const isImage = file.type.startsWith('image/')
+        const isDocx = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+                       file.name.endsWith('.docx') || file.name.endsWith('.doc')
+        const isHtml = file.type === 'text/html' || file.name.endsWith('.html') || file.name.endsWith('.htm')
+        const isText = file.type.startsWith('text/') || file.name.endsWith('.txt')
+        
+        if (!isImage && !isDocx && !isHtml && !isText) {
+          newFiles.push({
+            id: fileId,
+            name: file.name,
+            originalFile: file,
+            content: '',
+            type: 'text',
+            status: 'error',
+            error: 'Invalid file format. Supported formats: TXT, HTML, DOCX, DOC, JPG, PNG, WEBP, GIF'
+          })
+          continue
+        }
 
-        if (file.type.startsWith('image/')) {
+        let content: string | HTMLImageElement = ''
+        let type: 'text' | 'image' | 'html' | 'docx' = 'text'
+
+        if (isImage) {
           // Handle image files
           type = 'image'
           const img = new Image()
@@ -52,7 +75,57 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
           })
           
           content = img
-        } else if (file.type === 'text/html' || file.name.endsWith('.html')) {
+        } else if (isDocx) {
+          // Handle DOCX files
+          type = 'docx'
+          const arrayBuffer = await file.arrayBuffer()
+          
+          try {
+            const result = await mammoth.convertToHtml({ arrayBuffer })
+            content = result.value
+            
+            // Check if conversion produced empty content
+            if (!content || content.trim().length === 0) {
+              newFiles.push({
+                id: fileId,
+                name: file.name,
+                originalFile: file,
+                content: '',
+                type: 'docx',
+                status: 'error',
+                error: 'Invalid Word document. The file may be corrupted or empty.'
+              })
+              continue
+            }
+            
+            // Store warnings if any
+            const warnings = result.messages
+              .filter(m => m.type === 'warning')
+              .map(m => m.message)
+            
+            newFiles.push({
+              id: fileId,
+              name: file.name,
+              originalFile: file,
+              content,
+              type,
+              status: 'pending',
+              warnings: warnings.length > 0 ? warnings : undefined
+            })
+            continue
+          } catch (docxError) {
+            newFiles.push({
+              id: fileId,
+              name: file.name,
+              originalFile: file,
+              content: '',
+              type: 'docx',
+              status: 'error',
+              error: 'Failed to parse Word document. The file may be corrupted or in an unsupported format.'
+            })
+            continue
+          }
+        } else if (isHtml) {
           // Handle HTML files
           type = 'html'
           content = await file.text()
@@ -78,7 +151,7 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
           content: '',
           type: 'text',
           status: 'error',
-          error: 'Failed to read file content'
+          error: error instanceof Error ? error.message : 'Failed to read file content'
         })
       }
     }
@@ -130,20 +203,114 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
         const y = margin + (contentHeight - scaledHeight) / 2
         
         pdf.addImage(img, 'JPEG', x, y, scaledWidth, scaledHeight)
+      } else if (file.type === 'docx' || file.type === 'html') {
+        // Handle DOCX (converted to HTML) and HTML conversion
+        let htmlContent = file.content as string
+        
+        // Create a temporary div to parse HTML
+        const tempDiv = document.createElement('div')
+        tempDiv.innerHTML = htmlContent
+        
+        let y = margin + 12
+        
+        // Process HTML elements
+        const processElement = (element: Element, indent: number = 0) => {
+          const tagName = element.tagName.toLowerCase()
+          const text = element.textContent?.trim() || ''
+          
+          if (!text) return
+          
+          // Handle headings
+          if (tagName.match(/^h[1-6]$/)) {
+            const level = parseInt(tagName[1])
+            const fontSize = 20 - (level * 2)
+            pdf.setFontSize(fontSize)
+            pdf.setFont('helvetica', 'bold')
+            
+            const lines = pdf.splitTextToSize(text, contentWidth - indent)
+            for (const line of lines) {
+              if (y + fontSize > pageHeight - margin) {
+                pdf.addPage()
+                y = margin + 12
+              }
+              pdf.text(line, margin + indent, y)
+              y += fontSize * 0.5
+            }
+            
+            pdf.setFont('helvetica', 'normal')
+            pdf.setFontSize(12)
+            y += 6
+          }
+          // Handle paragraphs
+          else if (tagName === 'p') {
+            const isBold = element.querySelector('strong, b') !== null
+            const isItalic = element.querySelector('em, i') !== null
+            
+            if (isBold && isItalic) pdf.setFont('helvetica', 'bolditalic')
+            else if (isBold) pdf.setFont('helvetica', 'bold')
+            else if (isItalic) pdf.setFont('helvetica', 'italic')
+            
+            const lines = pdf.splitTextToSize(text, contentWidth - indent)
+            for (const line of lines) {
+              if (y + 12 > pageHeight - margin) {
+                pdf.addPage()
+                y = margin + 12
+              }
+              pdf.text(line, margin + indent, y)
+              y += 6
+            }
+            
+            pdf.setFont('helvetica', 'normal')
+            y += 6
+          }
+          // Handle list items
+          else if (tagName === 'li') {
+            const bullet = '• '
+            const lines = pdf.splitTextToSize(bullet + text, contentWidth - indent - 5)
+            for (const line of lines) {
+              if (y + 12 > pageHeight - margin) {
+                pdf.addPage()
+                y = margin + 12
+              }
+              pdf.text(line, margin + indent + 5, y)
+              y += 6
+            }
+          }
+          // Handle images in DOCX
+          else if (tagName === 'img') {
+            const imgSrc = element.getAttribute('src')
+            if (imgSrc && imgSrc.startsWith('data:image')) {
+              try {
+                const imgHeight = 50 // Fixed height for embedded images
+                if (y + imgHeight > pageHeight - margin) {
+                  pdf.addPage()
+                  y = margin + 12
+                }
+                pdf.addImage(imgSrc, 'JPEG', margin + indent, y, contentWidth - indent, imgHeight)
+                y += imgHeight + 6
+              } catch (error) {
+                console.error('Failed to add image:', error)
+              }
+            }
+          }
+        }
+        
+        // Process all child elements
+        const processChildren = (parent: Element, indent: number = 0) => {
+          for (const child of Array.from(parent.children)) {
+            if (child.tagName.toLowerCase() === 'ul' || child.tagName.toLowerCase() === 'ol') {
+              processChildren(child, indent + 5)
+            } else {
+              processElement(child, indent)
+            }
+          }
+        }
+        
+        processChildren(tempDiv)
       } else {
-        // Handle text and HTML conversion
+        // Handle plain text conversion
         let textContent = file.content as string
         
-        if (file.type === 'html') {
-          // Strip HTML tags for simple text conversion
-          textContent = textContent
-            .replace(/<script[^>]*>.*?<\/script>/gi, '')
-            .replace(/<style[^>]*>.*?<\/style>/gi, '')
-            .replace(/<[^>]*>/g, ' ')
-            .replace(/\s+/g, ' ')
-            .trim()
-        }
-
         const lines = pdf.splitTextToSize(textContent, contentWidth)
         let y = margin + 12
 
@@ -154,7 +321,7 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
           }
           
           pdf.text(lines[i], margin, y)
-          y += 18 // 1.5 line height
+          y += 6
         }
       }
 
@@ -171,7 +338,7 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
         f.id === fileId ? { 
           ...f, 
           status: 'error', 
-          error: 'Failed to convert to PDF' 
+          error: error instanceof Error ? error.message : 'Failed to convert to PDF'
         } : f
       ))
     }
@@ -197,6 +364,11 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+  }, [])
+
+  const previewPdf = useCallback((file: ProcessedFile) => {
+    if (!file.pdfUrl) return
+    setPreviewFile(file)
   }, [])
 
   const removeFile = useCallback((fileId: string) => {
@@ -236,7 +408,7 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
         <CardHeader>
           <CardTitle className="text-lg">Select Files</CardTitle>
           <CardDescription>
-            Choose text files, images, or HTML files to convert to PDF
+            Choose text files, images, HTML files, or Word documents (.docx) to convert to PDF
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -248,14 +420,14 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
                   <p className="mb-2 text-sm text-gray-500">
                     <span className="font-semibold">Click to upload</span> documents
                   </p>
-                  <p className="text-xs text-gray-500">TXT, HTML, JPG, PNG, WEBP, GIF</p>
+                  <p className="text-xs text-gray-500">TXT, HTML, DOCX, DOC, JPG, PNG, WEBP, GIF</p>
                 </div>
                 <input
                   ref={fileInputRef}
                   type="file"
                   className="hidden"
                   multiple
-                  accept=".txt,.html,.htm,.jpg,.jpeg,.png,.webp,.gif,text/plain,text/html,image/*"
+                  accept=".txt,.html,.htm,.docx,.doc,.jpg,.jpeg,.png,.webp,.gif,text/plain,text/html,image/*,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
                   onChange={handleFileUpload}
                 />
               </label>
@@ -311,6 +483,22 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
                       {file.status === 'error' && (
                         <div className="text-xs text-red-600">{file.error}</div>
                       )}
+                      {file.warnings && file.warnings.length > 0 && (
+                        <details className="text-xs text-amber-600 mt-1">
+                          <summary className="flex items-center gap-1 cursor-pointer">
+                            <AlertCircle className="h-3 w-3 flex-shrink-0" />
+                            <span>Unsupported features detected ({file.warnings.length})</span>
+                          </summary>
+                          <ul className="mt-1 ml-4 list-disc space-y-1">
+                            {file.warnings.slice(0, 5).map((warning, idx) => (
+                              <li key={idx}>{warning}</li>
+                            ))}
+                            {file.warnings.length > 5 && (
+                              <li>...and {file.warnings.length - 5} more</li>
+                            )}
+                          </ul>
+                        </details>
+                      )}
                     </div>
                   </div>
                   
@@ -326,18 +514,32 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
                     )}
                     
                     {file.status === 'processing' && (
-                      <div className="text-sm text-blue-600">Converting...</div>
+                      <div className="flex items-center space-x-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                        <span className="text-sm text-blue-600">Converting...</span>
+                      </div>
                     )}
                     
                     {file.status === 'completed' && file.pdfUrl && (
-                      <Button
-                        size="sm"
-                        onClick={() => downloadPdf(file)}
-                        className="bg-green-600 hover:bg-green-700"
-                      >
-                        <Download className="h-4 w-4 mr-1" />
-                        Download PDF
-                      </Button>
+                      <>
+                        <CheckCircle2 className="h-5 w-5 text-green-600 animate-bounce mr-2" />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => previewPdf(file)}
+                          className="mr-2"
+                        >
+                          Preview
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => downloadPdf(file)}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <Download className="h-4 w-4 mr-1" />
+                          Download PDF
+                        </Button>
+                      </>
                     )}
                     
                     <Button
@@ -353,6 +555,49 @@ export default function DocumentToPdfTool({ tool }: DocumentToPdfToolProps) {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Preview Modal */}
+      {previewFile && previewFile.pdfUrl && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-lg">PDF Preview: {previewFile.name}</CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPreviewFile(null)}
+              >
+                Close
+              </Button>
+            </CardHeader>
+            <CardContent className="flex-1 overflow-auto">
+              <iframe
+                src={previewFile.pdfUrl}
+                className="w-full h-[600px] border rounded"
+                title="PDF Preview"
+              />
+              <div className="mt-4 flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setPreviewFile(null)}
+                >
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    downloadPdf(previewFile)
+                    setPreviewFile(null)
+                  }}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  Download PDF
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
 
       {/* Privacy Notice */}

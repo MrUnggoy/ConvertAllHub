@@ -41,7 +41,7 @@ export default function ConversionProgress({ onDownload, onRetry }: ConversionPr
         <CardTitle className="flex items-center space-x-2">
           <span>Conversion Progress</span>
           {state.isProcessing && (
-            <RefreshCw className="h-4 w-4 animate-spin" />
+            <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
           )}
         </CardTitle>
         <CardDescription>
@@ -51,25 +51,39 @@ export default function ConversionProgress({ onDownload, onRetry }: ConversionPr
       
       <CardContent className="space-y-4">
         {/* Overall Progress */}
-        <div className="space-y-2">
+        <div className="space-y-2" role="region" aria-label="Overall conversion progress">
           <div className="flex justify-between text-sm">
             <span>Overall Progress</span>
-            <span>{Math.round(overallProgress)}%</span>
+            <span aria-live="polite">{Math.round(overallProgress)}%</span>
           </div>
-          <Progress value={overallProgress} className="h-2" />
+          <Progress 
+            value={overallProgress} 
+            className="h-2"
+            aria-label="Overall progress"
+            aria-valuenow={Math.round(overallProgress)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          />
         </div>
 
         {/* Processing Files */}
         {processingFiles.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-2" role="region" aria-label="Currently processing files">
             <h4 className="font-medium text-sm">Currently Processing</h4>
             {processingFiles.map(file => (
               <div key={file.id} className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="truncate max-w-[200px]">{file.name}</span>
-                  <span>{file.progress}%</span>
+                  <span aria-live="polite">{file.progress}%</span>
                 </div>
-                <Progress value={file.progress} className="h-1" />
+                <Progress 
+                  value={file.progress} 
+                  className="h-1"
+                  aria-label={`Processing ${file.name}`}
+                  aria-valuenow={file.progress}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                />
               </div>
             ))}
           </div>
@@ -77,9 +91,9 @@ export default function ConversionProgress({ onDownload, onRetry }: ConversionPr
 
         {/* Completed Files */}
         {completedFiles.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-2" role="region" aria-label="Completed files">
             <h4 className="font-medium text-sm flex items-center space-x-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-green-500" aria-hidden="true" />
               <span>Completed ({completedFiles.length})</span>
             </h4>
             <div className="space-y-2 max-h-32 overflow-y-auto">
@@ -99,8 +113,9 @@ export default function ConversionProgress({ onDownload, onRetry }: ConversionPr
                       variant="outline"
                       onClick={() => onDownload(file.id, file.result!.outputUrl)}
                       className="ml-2"
+                      aria-label={`Download ${file.name}`}
                     >
-                      <Download className="h-3 w-3 mr-1" />
+                      <Download className="h-3 w-3 mr-1" aria-hidden="true" />
                       Download
                     </Button>
                   )}
@@ -112,9 +127,9 @@ export default function ConversionProgress({ onDownload, onRetry }: ConversionPr
 
         {/* Error Files */}
         {errorFiles.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-2" role="region" aria-label="Failed files">
             <h4 className="font-medium text-sm flex items-center space-x-2">
-              <AlertCircle className="h-4 w-4 text-red-500" />
+              <AlertCircle className="h-4 w-4 text-red-500" aria-hidden="true" />
               <span>Failed ({errorFiles.length})</span>
             </h4>
             <div className="space-y-2 max-h-32 overflow-y-auto">
@@ -130,8 +145,9 @@ export default function ConversionProgress({ onDownload, onRetry }: ConversionPr
                       variant="outline"
                       onClick={() => onRetry(file.id)}
                       className="ml-2"
+                      aria-label={`Retry ${file.name}`}
                     >
-                      <RefreshCw className="h-3 w-3 mr-1" />
+                      <RefreshCw className="h-3 w-3 mr-1" aria-hidden="true" />
                       Retry
                     </Button>
                   )}

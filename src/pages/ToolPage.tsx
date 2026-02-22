@@ -2,6 +2,9 @@ import React, { Suspense } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { toolRegistry } from '@/tools/registry'
 import { useConversion } from '@/contexts/ConversionContext'
+import MetaTags from '@/components/seo/MetaTags'
+import SchemaMarkup, { createSoftwareApplicationSchema } from '@/components/seo/SchemaMarkup'
+import ToolDocumentation from '@/components/tools/ToolDocumentation'
 
 export default function ToolPage() {
   const { toolId } = useParams<{ toolId: string }>()
@@ -34,8 +37,46 @@ export default function ToolPage() {
 
   const ToolComponent = tool.component
 
+  // SEO data for tool page
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://convertall.hub'
+  const toolUrl = `${baseUrl}/tool/${toolId}`
+  const seoTitle = `${tool.name} - Free Online ${tool.category.toUpperCase()} Tool | ConvertAll Hub`
+  const seoDescription = `${tool.description}. Convert ${tool.inputFormats.join(', ')} to ${tool.outputFormats.join(', ')} online for free. Fast, secure, and privacy-focused conversion tool.`
+  const seoKeywords = [
+    tool.name.toLowerCase(),
+    ...tool.inputFormats.map(f => f.toLowerCase()),
+    ...tool.outputFormats.map(f => f.toLowerCase()),
+    'converter',
+    'online',
+    'free',
+    tool.category,
+    'file conversion'
+  ]
+
+  // Schema markup for tool
+  const toolSchema = createSoftwareApplicationSchema(
+    tool.name,
+    tool.description,
+    toolUrl,
+    tool.category,
+    tool.inputFormats,
+    tool.outputFormats
+  )
+
   return (
     <div className="space-y-6">
+      {/* SEO Meta Tags */}
+      <MetaTags
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        canonicalUrl={toolUrl}
+        type="website"
+      />
+
+      {/* Schema Markup */}
+      <SchemaMarkup type="SoftwareApplication" data={toolSchema} />
+
       <div className="flex items-center space-x-3">
         <tool.icon className="h-8 w-8" />
         <div>
@@ -54,6 +95,9 @@ export default function ToolPage() {
       }>
         <ToolComponent tool={tool} />
       </Suspense>
+
+      {/* Tool Documentation */}
+      <ToolDocumentation tool={tool} />
     </div>
   )
 }

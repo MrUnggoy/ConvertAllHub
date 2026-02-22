@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ToolDefinition } from '@/tools/registry'
-import { FileText, Upload, Download, X, ArrowUp, ArrowDown } from 'lucide-react'
+import { FileText, Upload, Download, X, ArrowUp, ArrowDown, CheckCircle2 } from 'lucide-react'
 import { PDFDocument } from 'pdf-lib'
 
 interface PdfMergerToolProps {
@@ -257,9 +257,12 @@ export default function PdfMergerTool({ tool }: PdfMergerToolProps) {
 
       {/* Download Result */}
       {mergedPdfUrl && (
-        <Card>
+        <Card className="animate-fade-in">
           <CardHeader>
-            <CardTitle className="text-lg text-green-600">✅ Merge Complete!</CardTitle>
+            <CardTitle className="text-lg text-green-600 flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 animate-bounce" />
+              Merge Complete!
+            </CardTitle>
             <CardDescription>
               Your PDFs have been successfully merged into a single document.
             </CardDescription>

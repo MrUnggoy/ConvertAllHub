@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Download, FileText, Copy, Zap } from 'lucide-react'
+import { Download, FileText, Copy, Zap, CheckCircle2 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import FileUpload from '@/components/FileUpload'
@@ -218,10 +218,13 @@ export default function PdfTextExtractTool({ tool }: PdfTextExtractToolProps) {
 
       {/* Extracted Text Display */}
       {extractedText && (
-        <Card>
+        <Card className="animate-fade-in">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Extracted Text</span>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-green-600 animate-bounce" />
+                <span>Extracted Text</span>
+              </div>
               <div className="flex space-x-2">
                 <Button size="sm" variant="outline" onClick={handleCopyText}>
                   <Copy className="h-4 w-4 mr-1" />

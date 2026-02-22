@@ -108,7 +108,7 @@ export function useProFeatures() {
   }, [limits, usageStats])
 
   // Track usage
-  const trackConversionUsage = useCallback(async (toolId: string, fileSize: number) => {
+  const trackConversionUsage = useCallback(async (_toolId: string, fileSize: number) => {
     const newStats = {
       ...usageStats,
       conversionsToday: usageStats.conversionsToday + 1,
