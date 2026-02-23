@@ -23,7 +23,7 @@
   /* Essential Colors */
   --color-primary-500: #667eea;
   --color-secondary-500: #764ba2;
-  --color-neutral-50: #fafafa;
+  --color-neutral-50: #ffffff;
   --color-neutral-900: #171717;
   
   /* Essential Typography */
@@ -74,7 +74,7 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   color: var(--color-neutral-900);
-  background-color: var(--color-neutral-50);
+  background-color: #ffffff;
 }
 
 /* ============================================
