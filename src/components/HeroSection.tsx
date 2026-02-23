@@ -1,135 +1,188 @@
 import { cn } from '@/lib/utils'
+import { LucideIcon, Shield, Clock, Lock } from 'lucide-react'
+import ValueProposition from './ValueProposition'
+import { PrimaryCTA } from './PrimaryCTA'
+import OptimizedImage, { ImageSource } from './OptimizedImage'
+
+/**
+ * HeroSection Component
+ * 
+ * Enhanced hero section with value proposition, prominent CTA, and trust signals.
+ * Validates: Requirements 1.1, 1.4, 2.1, 2.3, 2.5, 3.1, 3.2, 8.2, 9.1, 9.3, 9.4
+ * 
+ * Features:
+ * - Value proposition within first 600px (Requirements 1.1, 1.4)
+ * - Strong visual hierarchy (Requirements 2.1, 2.3, 2.5)
+ * - Prominent primary CTA above fold (Requirements 3.1, 3.2)
+ * - Semantic HTML structure (Requirement 8.2)
+ * - Optimized for First Contentful Paint < 1.5s (Requirements 9.1, 9.3)
+ * - Optimized images with WebP and responsive srcset (Requirement 9.4)
+ * - Mobile-first responsive design
+ */
+
+export interface TrustSignal {
+  icon: LucideIcon
+  text: string
+  description: string
+  metric?: string
+}
+
+export interface HeroBackgroundImage {
+  src: string
+  alt: string
+  sources?: ImageSource[]
+  opacity?: number
+}
 
 interface HeroSectionProps {
   title: string
-  tagline: string
-  gradient?: {
-    from: string
-    via?: string
-    to: string
+  valueProposition: {
+    what: string      // "Free online file conversion tools"
+    who: string       // "for everyone"
+    why: string       // "Fast, secure, private"
   }
+  primaryCTA: {
+    text: string
+    action: () => void
+    ariaLabel: string
+  }
+  trustSignals?: TrustSignal[]
+  backgroundImage?: HeroBackgroundImage
   className?: string
 }
 
+const defaultTrustSignals: TrustSignal[] = [
+  {
+    icon: Shield,
+    text: 'Privacy-First',
+    description: 'Files processed securely',
+    metric: '256-bit encryption'
+  },
+  {
+    icon: Clock,
+    text: 'Auto-Delete',
+    description: 'Files deleted after 1 hour',
+  },
+  {
+    icon: Lock,
+    text: 'No Signup',
+    description: 'Start converting immediately',
+  }
+]
+
 export default function HeroSection({ 
   title, 
-  tagline, 
-  gradient = { from: 'blue-600', to: 'purple-600' },
+  valueProposition,
+  primaryCTA,
+  trustSignals = defaultTrustSignals,
+  backgroundImage,
   className 
 }: HeroSectionProps) {
   return (
-    <div 
+    <header 
       className={cn(
         "relative overflow-hidden rounded-3xl",
         className
       )}
     >
-      {/* Animated gradient background */}
-      <div 
-        className="absolute inset-0 animate-gradient"
-        style={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%)',
-          backgroundSize: '400% 400%'
-        }}
-      />
-      
-      {/* Glassmorphism overlay */}
-      <div className="absolute inset-0 glass" />
-      
-      {/* Floating geometric shapes */}
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        <div 
-          className="absolute top-20 left-20 w-64 h-64 rounded-full animate-float"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)',
-            filter: 'blur(40px)',
-            animationDelay: '0s'
-          }}
-        />
-        <div 
-          className="absolute bottom-20 right-20 w-80 h-80 rounded-full animate-float"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%)',
-            filter: 'blur(50px)',
-            animationDelay: '2s'
-          }}
-        />
-        <div 
-          className="absolute top-1/2 left-1/3 w-56 h-56 rounded-full animate-float"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%)',
-            filter: 'blur(45px)',
-            animationDelay: '4s'
-          }}
-        />
-        
-        {/* Geometric shapes */}
-        <div 
-          className="absolute top-40 right-1/4 w-32 h-32 rotate-45 animate-float opacity-10"
-          style={{
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%)',
-            borderRadius: '20%',
-            animationDelay: '1s'
-          }}
-        />
-        <div 
-          className="absolute bottom-40 left-1/4 w-40 h-40 rotate-12 animate-float opacity-10"
-          style={{
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%)',
-            borderRadius: '30%',
-            animationDelay: '3s'
-          }}
-        />
-      </div>
-      
-      {/* Content */}
-      <div className="relative px-6 py-24 sm:px-12 sm:py-32 lg:py-40">
-        <div className="mx-auto max-w-5xl text-center">
-          {/* Title with glow effect */}
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl animate-fade-in">
-            <span className="inline-block relative">
-              {title}
-              {/* Text glow */}
-              <span 
-                className="absolute inset-0 blur-2xl opacity-50"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text'
-                }}
-              >
-                {title}
-              </span>
-            </span>
-          </h1>
-          
-          {/* Tagline with subtle animation */}
-          <p 
-            className="mt-8 text-xl sm:text-2xl lg:text-3xl text-white/95 max-w-3xl mx-auto font-medium leading-relaxed animate-fade-in"
-            style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
-          >
-            {tagline}
-          </p>
-          
-          {/* Decorative line with gradient */}
+      {/* Background - either image or gradient */}
+      {backgroundImage ? (
+        <>
+          {/* Optimized background image with WebP support and responsive srcset */}
+          <div className="absolute inset-0">
+            <OptimizedImage
+              src={backgroundImage.src}
+              alt={backgroundImage.alt}
+              sources={backgroundImage.sources}
+              priority // Hero images should load eagerly for LCP optimization
+              className="w-full h-full"
+              objectFit="cover"
+            />
+          </div>
+          {/* Overlay for text readability */}
           <div 
-            className="mt-12 mx-auto w-32 h-1 rounded-full animate-fade-in"
+            className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-purple-900/80"
+            style={{ opacity: backgroundImage.opacity ?? 0.7 }}
+          />
+        </>
+      ) : (
+        <>
+          {/* Simplified gradient background - optimized for FCP */}
+          {/* Using CSS custom properties for better performance */}
+          <div 
+            className="absolute inset-0"
             style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
-              animationDelay: '0.4s',
-              animationFillMode: 'both'
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              willChange: 'auto', // Prevent unnecessary layer promotion
             }}
           />
-        </div>
-      </div>
+          
+          {/* Subtle overlay for depth - removed to minimize main thread work */}
+        </>
+      )}
       
-      {/* Bottom gradient fade */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 h-32"
-        style={{
-          background: 'linear-gradient(to top, rgba(0,0,0,0.1) 0%, transparent 100%)'
-        }}
-      />
-    </div>
+      {/* Main content - semantic structure */}
+      <section className="relative px-4 py-12 sm:px-8 sm:py-16 md:py-20 lg:py-24">
+        <div className="mx-auto max-w-4xl">
+          {/* Value Proposition - First element for immediate understanding */}
+          <ValueProposition
+            what={valueProposition.what}
+            who={valueProposition.who}
+            why={valueProposition.why}
+            className="mb-6 sm:mb-8"
+          />
+          
+          {/* Title - Strong visual hierarchy - removed animation for faster interactivity */}
+          <h1 
+            className="text-center text-white font-extrabold tracking-tight"
+            style={{
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)', // 2.5rem mobile, 4rem desktop (Requirement 2.3)
+              fontWeight: 800, // >= 700 (Requirement 2.1)
+              lineHeight: 1.1,
+            }}
+          >
+            {title}
+          </h1>
+          
+          {/* Primary CTA - Prominent positioning above fold - removed animation for faster interactivity */}
+          <div className="mt-8 sm:mt-10 flex justify-center">
+            <PrimaryCTA
+              text={primaryCTA.text}
+              onClick={primaryCTA.action}
+              ariaLabel={primaryCTA.ariaLabel}
+              variant="primary"
+              size="large"
+              className="shadow-xl hover:shadow-2xl"
+            />
+          </div>
+          
+          {/* Trust Signals - Integrated in hero - removed animation for faster interactivity */}
+          <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8">
+            {trustSignals.map((signal, index) => (
+              <div
+                key={index}
+                className="group flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors duration-200 cursor-default"
+                title={signal.description}
+              >
+                <signal.icon 
+                  className="w-5 h-5 text-white/90 flex-shrink-0" 
+                  aria-hidden="true"
+                />
+                <div className="text-left">
+                  <span className="block text-white font-semibold text-sm leading-tight">
+                    {signal.text}
+                  </span>
+                  {signal.metric && (
+                    <span className="block text-white/80 text-xs leading-tight mt-0.5">
+                      {signal.metric}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </header>
   )
 }

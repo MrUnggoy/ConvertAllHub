@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ErrorDisplay, { ConversionError } from './ErrorDisplay'
 
@@ -127,7 +127,7 @@ describe('ErrorDisplay Component', () => {
         />
       )
 
-      expect(screen.getByText(/Please try again/)).toBeInTheDocument()
+      expect(screen.getAllByText(/Please try again/)[0]).toBeInTheDocument()
       expect(screen.getByText(/Suggested action:/)).toBeInTheDocument()
     })
 
@@ -170,7 +170,8 @@ describe('ErrorDisplay Component', () => {
     })
 
     it('calls onRetry when retry button is clicked', async () => {
-      const user = userEvent.setup({ delay: null })
+      vi.useRealTimers() // Use real timers for user interactions
+      const user = userEvent.setup()
       const onRetry = vi.fn()
 
       render(
@@ -185,6 +186,7 @@ describe('ErrorDisplay Component', () => {
       await user.click(retryButton)
 
       expect(onRetry).toHaveBeenCalledTimes(1)
+      vi.useFakeTimers() // Restore fake timers
     })
   })
 
@@ -215,7 +217,6 @@ describe('ErrorDisplay Component', () => {
     })
 
     it('calls onDismiss when dismiss button is clicked', async () => {
-      const user = userEvent.setup({ delay: null })
       const onDismiss = vi.fn()
 
       render(
@@ -227,10 +228,12 @@ describe('ErrorDisplay Component', () => {
       )
 
       const dismissButton = screen.getByRole('button', { name: /dismiss/i })
-      await user.click(dismissButton)
+      fireEvent.click(dismissButton)
 
       // Wait for animation
-      vi.advanceTimersByTime(300)
+      act(() => {
+        vi.advanceTimersByTime(300)
+      })
 
       await waitFor(() => {
         expect(onDismiss).toHaveBeenCalledTimes(1)
@@ -267,8 +270,6 @@ describe('ErrorDisplay Component', () => {
     })
 
     it('expands technical details when button is clicked', async () => {
-      const user = userEvent.setup({ delay: null })
-
       render(
         <ErrorDisplay
           error={mockError}
@@ -279,7 +280,7 @@ describe('ErrorDisplay Component', () => {
       const showButton = screen.getByRole('button', { name: /show details/i })
       expect(showButton).toHaveAttribute('aria-expanded', 'false')
 
-      await user.click(showButton)
+      fireEvent.click(showButton)
 
       expect(screen.getByText(/Stack trace/)).toBeInTheDocument()
       expect(screen.getByText(/Error Code: TEST_ERROR/)).toBeInTheDocument()
@@ -288,8 +289,6 @@ describe('ErrorDisplay Component', () => {
     })
 
     it('collapses technical details when hide button is clicked', async () => {
-      const user = userEvent.setup({ delay: null })
-
       render(
         <ErrorDisplay
           error={mockError}
@@ -299,13 +298,13 @@ describe('ErrorDisplay Component', () => {
 
       // Expand
       const showButton = screen.getByRole('button', { name: /show details/i })
-      await user.click(showButton)
+      fireEvent.click(showButton)
 
       expect(screen.getByText(/Stack trace/)).toBeInTheDocument()
 
       // Collapse
       const hideButton = screen.getByRole('button', { name: /hide details/i })
-      await user.click(hideButton)
+      fireEvent.click(hideButton)
 
       expect(screen.queryByText(/Stack trace/)).not.toBeInTheDocument()
       expect(hideButton).toHaveAttribute('aria-expanded', 'false')
@@ -327,7 +326,9 @@ describe('ErrorDisplay Component', () => {
       expect(onDismiss).not.toHaveBeenCalled()
 
       // Fast-forward 5 seconds + animation time
-      vi.advanceTimersByTime(5300)
+      act(() => {
+        vi.advanceTimersByTime(5300)
+      })
 
       await waitFor(() => {
         expect(onDismiss).toHaveBeenCalledTimes(1)
@@ -345,11 +346,11 @@ describe('ErrorDisplay Component', () => {
         />
       )
 
-      vi.advanceTimersByTime(10000)
-
-      await waitFor(() => {
-        expect(onDismiss).not.toHaveBeenCalled()
+      act(() => {
+        vi.advanceTimersByTime(10000)
       })
+
+      expect(onDismiss).not.toHaveBeenCalled()
     })
 
     it('does not auto-dismiss warning messages', async () => {
@@ -363,11 +364,11 @@ describe('ErrorDisplay Component', () => {
         />
       )
 
-      vi.advanceTimersByTime(10000)
-
-      await waitFor(() => {
-        expect(onDismiss).not.toHaveBeenCalled()
+      act(() => {
+        vi.advanceTimersByTime(10000)
       })
+
+      expect(onDismiss).not.toHaveBeenCalled()
     })
 
     it('does not auto-dismiss if onDismiss is not provided', async () => {
@@ -439,8 +440,6 @@ describe('ErrorDisplay Component', () => {
     })
 
     it('technical details section has proper aria-controls', async () => {
-      const user = userEvent.setup({ delay: null })
-
       render(
         <ErrorDisplay
           error={mockError}
@@ -451,7 +450,7 @@ describe('ErrorDisplay Component', () => {
       const toggleButton = screen.getByRole('button', { name: /show details/i })
       expect(toggleButton).toHaveAttribute('aria-controls', 'technical-details')
 
-      await user.click(toggleButton)
+      fireEvent.click(toggleButton)
 
       const detailsSection = screen.getByText(/Stack trace/).closest('div')
       expect(detailsSection).toHaveAttribute('id', 'technical-details')
@@ -527,7 +526,7 @@ describe('ErrorDisplay Component', () => {
         />
       )
 
-      expect(screen.getByText(/PDF, DOCX, TXT, JPG, PNG/)).toBeInTheDocument()
+      expect(screen.getAllByText(/PDF, DOCX, TXT, JPG, PNG/)[0]).toBeInTheDocument()
     })
   })
 })

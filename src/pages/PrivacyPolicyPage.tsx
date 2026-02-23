@@ -3,7 +3,7 @@ import MetaTags from '@/components/seo/MetaTags'
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <article className="max-w-4xl mx-auto space-y-8">
       {/* SEO Meta Tags */}
       <MetaTags
         title="Privacy Policy - ConvertAll Hub"
@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
       />
 
       {/* Header */}
-      <div className="text-center space-y-4">
+      <header className="text-center space-y-4">
         <div className="flex justify-center">
           <Shield className="h-16 w-16 text-primary" aria-hidden="true" />
         </div>
@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
         <p className="text-sm text-muted-foreground">
           Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
-      </div>
+      </header>
 
       {/* Key Privacy Features */}
       <div className="grid md:grid-cols-3 gap-6">
@@ -233,6 +233,6 @@ export default function PrivacyPolicyPage() {
           </p>
         </section>
       </div>
-    </div>
+    </article>
   )
 }

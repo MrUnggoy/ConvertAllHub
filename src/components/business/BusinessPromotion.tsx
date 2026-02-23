@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import OptimizedImage from '@/components/OptimizedImage'
 
 export interface BusinessPromotionConfig {
   id: string
@@ -47,10 +48,13 @@ export default function BusinessPromotion({ config, className }: BusinessPromoti
           )}
         </div>
         {config.imageUrl && (
-          <img 
-            src={config.imageUrl} 
+          <OptimizedImage
+            src={config.imageUrl}
             alt={config.title}
-            className="w-20 h-20 object-cover rounded-lg"
+            width={80}
+            height={80}
+            className="w-20 h-20 rounded-lg"
+            objectFit="cover"
           />
         )}
       </div>

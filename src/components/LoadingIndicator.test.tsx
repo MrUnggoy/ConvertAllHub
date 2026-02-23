@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import { LoadingIndicator } from './LoadingIndicator'
 
 describe('LoadingIndicator', () => {
@@ -34,7 +34,9 @@ describe('LoadingIndicator', () => {
       render(<LoadingIndicator type="spinner" message="Loading..." />)
       
       // Fast-forward time by 1 second
-      vi.advanceTimersByTime(1000)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       // Should now be visible
       await waitFor(() => {
@@ -46,11 +48,15 @@ describe('LoadingIndicator', () => {
       render(<LoadingIndicator type="spinner" message="Loading..." delay={500} />)
       
       // Should not be visible at 400ms
-      vi.advanceTimersByTime(400)
+      act(() => {
+        vi.advanceTimersByTime(400)
+      })
       expect(screen.queryByRole('status')).not.toBeInTheDocument()
       
       // Should be visible at 500ms
-      vi.advanceTimersByTime(100)
+      act(() => {
+        vi.advanceTimersByTime(100)
+      })
       await waitFor(() => {
         expect(screen.getByRole('status')).toBeInTheDocument()
       })
@@ -68,12 +74,13 @@ describe('LoadingIndicator', () => {
   })
 
   describe('Spinner Type', () => {
-    beforeEach(() => {
-      vi.advanceTimersByTime(1000) // Skip delay
-    })
-
     it('renders spinner with message', async () => {
       render(<LoadingIndicator type="spinner" message="Loading data..." />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         expect(screen.getByRole('status')).toBeInTheDocument()
@@ -84,6 +91,11 @@ describe('LoadingIndicator', () => {
     it('renders spinner without message', async () => {
       render(<LoadingIndicator type="spinner" />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         expect(screen.getByRole('status')).toBeInTheDocument()
         // Should have default screen reader text
@@ -93,7 +105,9 @@ describe('LoadingIndicator', () => {
 
     it('applies correct size classes', async () => {
       const { rerender } = render(<LoadingIndicator type="spinner" size="small" />)
-      vi.advanceTimersByTime(1000)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const spinner = screen.getByRole('status').querySelector('svg')
@@ -109,12 +123,13 @@ describe('LoadingIndicator', () => {
   })
 
   describe('Skeleton Type', () => {
-    beforeEach(() => {
-      vi.advanceTimersByTime(1000) // Skip delay
-    })
-
     it('renders skeleton structure', async () => {
       render(<LoadingIndicator type="skeleton" />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const status = screen.getByRole('status')
@@ -129,6 +144,11 @@ describe('LoadingIndicator', () => {
     it('renders skeleton with message', async () => {
       render(<LoadingIndicator type="skeleton" message="Loading content..." />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         expect(screen.getByText('Loading content...')).toBeInTheDocument()
       })
@@ -136,7 +156,9 @@ describe('LoadingIndicator', () => {
 
     it('applies correct size classes', async () => {
       const { rerender } = render(<LoadingIndicator type="skeleton" size="small" />)
-      vi.advanceTimersByTime(1000)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const container = screen.getByRole('status').querySelector('.h-20')
@@ -152,12 +174,13 @@ describe('LoadingIndicator', () => {
   })
 
   describe('Progress Type', () => {
-    beforeEach(() => {
-      vi.advanceTimersByTime(1000) // Skip delay
-    })
-
     it('renders progress bar with percentage', async () => {
       render(<LoadingIndicator type="progress" progress={45} />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         expect(screen.getByRole('status')).toBeInTheDocument()
@@ -168,6 +191,11 @@ describe('LoadingIndicator', () => {
     it('renders progress bar with message', async () => {
       render(<LoadingIndicator type="progress" progress={60} message="Converting file..." />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         expect(screen.getByText('Converting file...')).toBeInTheDocument()
         expect(screen.getByText('60%')).toBeInTheDocument()
@@ -176,7 +204,9 @@ describe('LoadingIndicator', () => {
 
     it('clamps progress to 0-100 range', async () => {
       const { rerender } = render(<LoadingIndicator type="progress" progress={-10} />)
-      vi.advanceTimersByTime(1000)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         expect(screen.getByText('0%')).toBeInTheDocument()
@@ -190,7 +220,9 @@ describe('LoadingIndicator', () => {
 
     it('applies correct width to progress bar', async () => {
       render(<LoadingIndicator type="progress" progress={75} />)
-      vi.advanceTimersByTime(1000)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const progressBar = screen.getByRole('status').querySelector('.bg-gradient-primary')
@@ -200,12 +232,13 @@ describe('LoadingIndicator', () => {
   })
 
   describe('Accessibility (Requirements 8.2, 8.4)', () => {
-    beforeEach(() => {
-      vi.advanceTimersByTime(1000) // Skip delay
-    })
-
     it('has role="status" for all types', async () => {
       const { rerender } = render(<LoadingIndicator type="spinner" />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         expect(screen.getByRole('status')).toBeInTheDocument()
@@ -225,6 +258,11 @@ describe('LoadingIndicator', () => {
     it('has aria-live="polite" for screen reader announcements', async () => {
       render(<LoadingIndicator type="spinner" />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         const status = screen.getByRole('status')
         expect(status).toHaveAttribute('aria-live', 'polite')
@@ -233,6 +271,11 @@ describe('LoadingIndicator', () => {
 
     it('has aria-busy="true" during loading', async () => {
       render(<LoadingIndicator type="spinner" />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const status = screen.getByRole('status')
@@ -243,6 +286,11 @@ describe('LoadingIndicator', () => {
     it('provides screen reader text for spinner', async () => {
       render(<LoadingIndicator type="spinner" message="Loading data..." />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         // Check for sr-only text
         expect(screen.getByText('Loading data...')).toBeInTheDocument()
@@ -251,6 +299,11 @@ describe('LoadingIndicator', () => {
 
     it('provides screen reader text for progress', async () => {
       render(<LoadingIndicator type="progress" progress={45} message="Converting" />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         // Check for screen reader announcement with percentage
@@ -262,6 +315,11 @@ describe('LoadingIndicator', () => {
     it('hides decorative elements from screen readers', async () => {
       render(<LoadingIndicator type="spinner" />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         const spinner = screen.getByRole('status').querySelector('svg')
         expect(spinner).toHaveAttribute('aria-hidden', 'true')
@@ -270,12 +328,13 @@ describe('LoadingIndicator', () => {
   })
 
   describe('Animation', () => {
-    beforeEach(() => {
-      vi.advanceTimersByTime(1000) // Skip delay
-    })
-
     it('applies fade-in animation class', async () => {
       render(<LoadingIndicator type="spinner" />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const status = screen.getByRole('status')
@@ -286,6 +345,11 @@ describe('LoadingIndicator', () => {
     it('applies spin animation to spinner', async () => {
       render(<LoadingIndicator type="spinner" />)
       
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      
       await waitFor(() => {
         const spinner = screen.getByRole('status').querySelector('svg')
         expect(spinner?.classList.contains('animate-spin')).toBe(true)
@@ -294,12 +358,13 @@ describe('LoadingIndicator', () => {
   })
 
   describe('Custom Styling', () => {
-    beforeEach(() => {
-      vi.advanceTimersByTime(1000) // Skip delay
-    })
-
     it('applies custom className', async () => {
       render(<LoadingIndicator type="spinner" className="custom-class" />)
+      
+      // Advance timers to skip delay
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
       
       await waitFor(() => {
         const status = screen.getByRole('status')

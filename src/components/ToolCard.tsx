@@ -81,7 +81,7 @@ export default function ToolCard({
     <Link 
       to={toolRegistry.getToolRoute(tool.id)}
       aria-label={`${tool.name} - ${tool.description}`}
-      className="group block"
+      className="group block focus:outline-none"
     >
       <Card 
         className={cn(
@@ -92,7 +92,9 @@ export default function ToolCard({
           "shadow-premium hover:shadow-premium-lg",
           colors.glow,
           "hover:scale-[1.02] hover:-translate-y-1",
+          "active:scale-[0.98] active:translate-y-0",
           "focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2",
+          "group-focus:ring-2 group-focus:ring-primary group-focus:ring-offset-2",
           "min-h-[44px]",
           "relative overflow-hidden",
           className

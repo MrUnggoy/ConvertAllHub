@@ -1,7 +1,7 @@
 import { toolRegistry } from '@/tools/registry'
 import HeroSection from '@/components/HeroSection'
 import TrustBadges from '@/components/TrustBadges'
-import ToolCard from '@/components/ToolCard'
+import ToolLibrary from '@/components/ToolLibrary'
 import BusinessPromotion from '@/components/business/BusinessPromotion'
 import AdZone from '@/components/business/AdZone'
 import MetaTags from '@/components/seo/MetaTags'
@@ -80,6 +80,7 @@ export default function HomePage() {
         style={{
           background: 'radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%)'
         }}
+        aria-hidden="true"
       />
 
       <div className="space-y-16 pb-16">
@@ -95,54 +96,49 @@ export default function HomePage() {
         {/* Schema Markup */}
         <SchemaMarkup type="WebApplication" data={combinedSchema} />
 
-        {/* Hero Section */}
-        <div className="animate-fade-in">
+        {/* Hero Section - Enhanced with value proposition and prominent CTA */}
+        <section aria-label="Welcome and introduction" className="animate-fade-in">
           <HeroSection 
             title="ConvertAll Hub"
-            tagline="Free online file conversion tools - Privacy-first, client-side processing"
+            valueProposition={{
+              what: "Free online file conversion tools",
+              who: "for everyone",
+              why: "Fast, secure, and privacy-first"
+            }}
+            primaryCTA={{
+              text: "Start Converting Now",
+              action: () => {
+                // Scroll to tools section
+                const toolsSection = document.querySelector('[role="list"]')
+                if (toolsSection) {
+                  toolsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+              },
+              ariaLabel: "Scroll to conversion tools"
+            }}
           />
-        </div>
+        </section>
 
-        {/* Trust Badges */}
-        <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-          <TrustBadges />
-        </div>
+        {/* Trust Badges - Enhanced with metrics and tooltips */}
+        <section aria-label="Trust and security features" className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+          <TrustBadges 
+            layout="horizontal"
+            showMetrics={true}
+          />
+        </section>
 
         {/* Ad Zone (top) */}
         {adZoneConfig.enabled && <AdZone config={adZoneConfig} />}
 
-        {/* Tool Count with gradient */}
-        <div className="text-center animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
-          <div className="inline-block">
-            <p className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-white dark:via-gray-300 dark:to-white bg-clip-text text-transparent">
-              {tools.length} Professional Tools Available
-            </p>
-            <div 
-              className="mt-2 h-1 rounded-full bg-gradient-to-r from-transparent via-blue-500 to-transparent"
-            />
-          </div>
-        </div>
-
-        {/* Tools Grid with stagger animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {tools.map((tool, index) => (
-            <div
-              key={tool.id}
-              className="animate-scale-in"
-              style={{
-                animationDelay: `${0.6 + index * 0.05}s`,
-                animationFillMode: 'both'
-              }}
-            >
-              <ToolCard tool={tool} />
-            </div>
-          ))}
-        </div>
+        {/* Tool Library with Category Filter and Search */}
+        <section aria-label="Available conversion tools" className="animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
+          <ToolLibrary tools={tools} />
+        </section>
 
         {/* Business Promotion */}
-        <div className="animate-fade-in">
+        <section aria-label="Business services" className="animate-fade-in">
           <BusinessPromotion config={businessPromoConfig} />
-        </div>
+        </section>
 
         {/* Premium Footer */}
         <footer className="relative mt-24">
@@ -152,6 +148,7 @@ export default function HomePage() {
             style={{
               background: 'linear-gradient(90deg, transparent 0%, rgba(102, 126, 234, 0.3) 50%, transparent 100%)'
             }}
+            aria-hidden="true"
           />
           
           <div className="text-center space-y-8">
@@ -163,29 +160,31 @@ export default function HomePage() {
             </div>
             
             {/* Footer links */}
-            <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 text-base">
-              <a 
-                href="/privacy" 
-                className="relative group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 min-h-[44px] flex items-center justify-center font-medium transition-colors duration-300"
-              >
-                Privacy Policy
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300" />
-              </a>
-              <a 
-                href="#" 
-                className="relative group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 min-h-[44px] flex items-center justify-center font-medium transition-colors duration-300"
-              >
-                Terms of Service
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300" />
-              </a>
-              <a 
-                href="#" 
-                className="relative group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 min-h-[44px] flex items-center justify-center font-medium transition-colors duration-300"
-              >
-                Contact
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300" />
-              </a>
-            </div>
+            <nav aria-label="Footer navigation">
+              <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 text-base">
+                <a 
+                  href="/privacy" 
+                  className="relative group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 min-h-[44px] flex items-center justify-center font-medium transition-colors duration-300"
+                >
+                  Privacy Policy
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300" aria-hidden="true" />
+                </a>
+                <a 
+                  href="#" 
+                  className="relative group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 min-h-[44px] flex items-center justify-center font-medium transition-colors duration-300"
+                >
+                  Terms of Service
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300" aria-hidden="true" />
+                </a>
+                <a 
+                  href="#" 
+                  className="relative group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 min-h-[44px] flex items-center justify-center font-medium transition-colors duration-300"
+                >
+                  Contact
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-300" aria-hidden="true" />
+                </a>
+              </div>
+            </nav>
             
             {/* Copyright */}
             <p className="text-sm text-gray-500 dark:text-gray-500 font-medium">

@@ -1,12 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Design System Imports */
+/* Design System Imports - must come before Tailwind directives */
+/* Note: These are deferred via DeferredStyles component for optimal FCP */
+/* Critical CSS is inlined in <head> via vite-plugin-critical-css */
 @import './styles/design-system/colors.css';
 @import './styles/design-system/typography.css';
 @import './styles/design-system/spacing.css';
 @import './styles/design-system/animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Mobile-specific utilities */
 @layer utilities {
@@ -382,47 +384,47 @@
 
 @layer base {
   :root {
-    --background: 35 20% 96%;
-    --foreground: 25 15% 15%;
-    --card: 30 25% 98%;
-    --card-foreground: 25 15% 15%;
-    --popover: 30 25% 98%;
-    --popover-foreground: 25 15% 15%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
     --primary: 25 75% 55%;
-    --primary-foreground: 30 25% 98%;
-    --secondary: 35 15% 88%;
-    --secondary-foreground: 25 15% 25%;
-    --muted: 35 15% 90%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
     --muted-foreground: 25 10% 45%;
-    --accent: 40 20% 92%;
-    --accent-foreground: 25 15% 25%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 70% 55%;
-    --destructive-foreground: 30 25% 98%;
-    --border: 35 12% 85%;
-    --input: 35 12% 85%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
     --ring: 25 75% 55%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 25 15% 8%;
-    --foreground: 35 20% 92%;
-    --card: 25 15% 10%;
-    --card-foreground: 35 20% 92%;
-    --popover: 25 15% 10%;
-    --popover-foreground: 35 20% 92%;
+    --background: 0 0% 9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
     --primary: 25 75% 65%;
-    --primary-foreground: 25 15% 8%;
-    --secondary: 25 10% 18%;
-    --secondary-foreground: 35 20% 92%;
-    --muted: 25 10% 16%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 25%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 25%;
     --muted-foreground: 35 10% 65%;
-    --accent: 25 10% 18%;
-    --accent-foreground: 35 20% 92%;
+    --accent: 0 0% 25%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 70% 60%;
-    --destructive-foreground: 35 20% 92%;
-    --border: 25 8% 22%;
-    --input: 25 8% 22%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
     --ring: 25 75% 65%;
   }
 }

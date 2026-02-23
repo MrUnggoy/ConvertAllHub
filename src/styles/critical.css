@@ -1,0 +1,301 @@
+/**
+ * Critical CSS - Above-the-Fold Content
+ * 
+ * This file contains only the essential CSS needed to render above-the-fold content.
+ * It should be inlined in the HTML <head> for optimal First Contentful Paint (FCP).
+ * 
+ * Validates: Requirements 9.1, 9.3 (Performance optimization for FCP < 1.5s)
+ * 
+ * Contents:
+ * - Essential CSS variables (colors, typography, spacing)
+ * - Hero section styles
+ * - Value proposition styles
+ * - Primary CTA styles
+ * - Basic layout and typography
+ * - Minimal animations for hero section
+ */
+
+/* ============================================
+   CRITICAL CSS VARIABLES
+   ============================================ */
+
+:root {
+  /* Essential Colors */
+  --color-primary-500: #667eea;
+  --color-secondary-500: #764ba2;
+  --color-neutral-50: #fafafa;
+  --color-neutral-900: #171717;
+  
+  /* Essential Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Essential Spacing */
+  --spacing-unit: 0.25rem;
+  --spacing-2: calc(var(--spacing-unit) * 2);   /* 8px */
+  --spacing-3: calc(var(--spacing-unit) * 3);   /* 12px */
+  --spacing-4: calc(var(--spacing-unit) * 4);   /* 16px */
+  --spacing-6: calc(var(--spacing-unit) * 6);   /* 24px */
+  --spacing-8: calc(var(--spacing-unit) * 8);   /* 32px */
+  --spacing-10: calc(var(--spacing-unit) * 10); /* 40px */
+  --spacing-12: calc(var(--spacing-unit) * 12); /* 48px */
+  
+  /* Essential Gradients */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Essential Animation Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  
+  /* Essential Easing */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  color: var(--color-neutral-900);
+  background-color: var(--color-neutral-50);
+}
+
+/* ============================================
+   HERO SECTION - CRITICAL STYLES
+   ============================================ */
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+}
+
+.hero-background {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+}
+
+.hero-content {
+  position: relative;
+  padding: 3rem 1rem;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+/* ============================================
+   VALUE PROPOSITION - CRITICAL STYLES
+   ============================================ */
+
+.value-proposition {
+  text-align: center;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.value-proposition-text {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+}
+
+/* ============================================
+   HERO TITLE - CRITICAL STYLES
+   ============================================ */
+
+.hero-title {
+  text-align: center;
+  color: white;
+  font-weight: var(--font-weight-extrabold);
+  font-size: 2.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+/* ============================================
+   PRIMARY CTA - CRITICAL STYLES
+   ============================================ */
+
+.primary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  color: white;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.primary-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.primary-cta:active {
+  transform: scale(0.98);
+}
+
+.primary-cta:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   TRUST SIGNALS - CRITICAL STYLES
+   ============================================ */
+
+.trust-signals {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.trust-signal {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  color: white;
+  transition: background var(--duration-normal) var(--ease-in-out);
+}
+
+.trust-signal:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.trust-signal-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.trust-signal-text {
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   MINIMAL ANIMATIONS - CRITICAL ONLY
+   Optimized for First Contentful Paint < 1.5s
+   Uses only opacity and transform for GPU acceleration
+   ============================================ */
+
+@keyframes fade-in-minimal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-critical {
+  animation: fade-in-minimal 0.3s var(--ease-out);
+  animation-fill-mode: both;
+}
+
+/* Stagger delays for sequential appearance */
+.animate-fade-in-critical[style*="animationDelay"] {
+  /* Delays are applied inline for flexibility */
+}
+
+/* ============================================
+   RESPONSIVE - TABLET AND DESKTOP
+   ============================================ */
+
+@media (min-width: 640px) {
+  .hero-content {
+    padding: 4rem 2rem;
+  }
+  
+  .value-proposition-text {
+    font-size: 1.5rem;
+  }
+  
+  .hero-title {
+    font-size: 3.5rem;
+  }
+  
+  .trust-signals {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    padding: 5rem 2rem;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    padding: 6rem 2rem;
+  }
+  
+  .trust-signals {
+    gap: 2rem;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Visible focus indicators for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
