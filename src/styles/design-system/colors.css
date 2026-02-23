@@ -5,43 +5,43 @@
  */
 
 :root {
-  /* Primary Color Scale - Blue-Purple Gradient Base */
-  --color-primary-50: #f5f7ff;
-  --color-primary-100: #ebf0ff;
-  --color-primary-200: #d6e0ff;
-  --color-primary-300: #b3c5ff;
-  --color-primary-400: #8099ff;
-  --color-primary-500: #667eea;
-  --color-primary-600: #5568d3;
-  --color-primary-700: #4553b8;
-  --color-primary-800: #374299;
-  --color-primary-900: #2d3680;
+  /* Primary Color Scale - Modern Blue */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
   --color-primary: var(--color-primary-500);
 
-  /* Secondary Color Scale - Purple */
-  --color-secondary-50: #faf5ff;
-  --color-secondary-100: #f3e8ff;
-  --color-secondary-200: #e9d5ff;
-  --color-secondary-300: #d8b4fe;
-  --color-secondary-400: #c084fc;
-  --color-secondary-500: #764ba2;
-  --color-secondary-600: #6b4492;
-  --color-secondary-700: #5d3a7d;
-  --color-secondary-800: #4f3169;
-  --color-secondary-900: #422957;
+  /* Secondary Color Scale - Light Blue */
+  --color-secondary-50: #f0f9ff;
+  --color-secondary-100: #e0f2fe;
+  --color-secondary-200: #bae6fd;
+  --color-secondary-300: #7dd3fc;
+  --color-secondary-400: #38bdf8;
+  --color-secondary-500: #60a5fa;
+  --color-secondary-600: #0284c7;
+  --color-secondary-700: #0369a1;
+  --color-secondary-800: #075985;
+  --color-secondary-900: #0c4a6e;
   --color-secondary: var(--color-secondary-500);
 
-  /* Accent Color Scale - Pink */
-  --color-accent-50: #fef5fb;
-  --color-accent-100: #fde8f7;
-  --color-accent-200: #fcd4f0;
-  --color-accent-300: #fab3e4;
-  --color-accent-400: #f78dd5;
-  --color-accent-500: #f093fb;
-  --color-accent-600: #d97ee0;
-  --color-accent-700: #be6bc4;
-  --color-accent-800: #a159a8;
-  --color-accent-900: #874a8d;
+  /* Accent Color Scale - Teal */
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #16a085;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0f766e;
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
   --color-accent: var(--color-accent-500);
 
   /* Neutral Color Scale - Grays */
@@ -90,16 +90,16 @@
   --color-info: var(--color-info-500);
 
   /* Gradient Definitions */
-  --gradient-primary: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 100%);
-  --gradient-secondary: linear-gradient(135deg, var(--color-accent-500) 0%, #f5576c 100%);
-  --gradient-ocean: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-sunset: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  --gradient-border: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 50%, var(--color-accent-500) 100%);
+  --gradient-primary: linear-gradient(135deg, #3B82F6 0%, #16A085 100%);
+  --gradient-secondary: linear-gradient(135deg, #16A085 0%, #3B82F6 100%);
+  --gradient-ocean: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+  --gradient-sunset: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  --gradient-border: linear-gradient(135deg, #3B82F6 0%, #16A085 50%, #3B82F6 100%);
 
   /* Background Colors */
   --bg-primary: #ffffff;
-  --bg-secondary: var(--color-neutral-50);
-  --bg-tertiary: var(--color-neutral-100);
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
   --bg-overlay: rgba(0, 0, 0, 0.5);
 
   /* Text Colors */
@@ -122,8 +122,8 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-glow-blue: 0 0 20px rgba(102, 126, 234, 0.4), 0 0 40px rgba(102, 126, 234, 0.2);
-  --shadow-glow-purple: 0 0 20px rgba(118, 75, 162, 0.4), 0 0 40px rgba(118, 75, 162, 0.2);
+  --shadow-glow-blue: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2);
+  --shadow-glow-teal: 0 0 20px rgba(22, 160, 133, 0.4), 0 0 40px rgba(22, 160, 133, 0.2);
   --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.2);
 }
 
